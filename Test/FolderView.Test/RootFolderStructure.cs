@@ -26,5 +26,5 @@ public static class RootFolderStructure
     public static List<string> Folder_1_1_Folder_1_1_Files { get; } = new();
 
     public static List<string> Folder_2_0_Folders { get; } = new();
-    public static List<string> Folder_2_0_Files { get; } = new();
+    public static List<string> Folder_2_0_Files { get; } = new() { "File_0.txt" };
 }
