@@ -1,0 +1,40 @@
+﻿[*.cs]
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = suggestion
+
+# SA1312: Variable names should begin with lower-case letter
+dotnet_diagnostic.SA1312.severity = none
+
+# SA1503: Braces should not be omitted
+dotnet_diagnostic.SA1503.severity = suggestion
+
+# SA1615: Element return value should be documented
+dotnet_diagnostic.SA1615.severity = suggestion
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = suggestion
+
+# Name convention
+
+## Local symbol group
+dotnet_naming_symbols.local_symbol_group.applicable_kinds = local
+
+## Local naming style
+dotnet_naming_style.local_naming_style.capitalization = first_word_upper
+
+## set group, style and violation severity
+dotnet_naming_rule.locals_are_first_word_upper.symbols = local_symbol_group
+dotnet_naming_rule.locals_are_first_word_upper.style = local_naming_style
+dotnet_naming_rule.locals_are_first_word_upper.severity = warning
+
+## Field symbol group
+dotnet_naming_symbols.field_symbol_group.applicable_kinds = field
+
+## Field naming style
+dotnet_naming_style.field_naming_style.capitalization = first_word_upper
+
+## set group, style and violation severity
+dotnet_naming_rule.fields_are_first_word_upper.symbols = field_symbol_group
+dotnet_naming_rule.fields_are_first_word_upper.style = field_naming_style
+dotnet_naming_rule.fields_are_first_word_upper.severity = warning
