@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderView.Test", "Test\FolderView.Test\FolderView.Test.csproj", "{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FolderView.Test", "Test\FolderView.Test\FolderView.Test.csproj", "{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,8 +24,8 @@ Global
 		{5107BDF8-9280-450E-9556-53244A502CA1}.Release|x64.Build.0 = Release|x64
 		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Debug|x64.ActiveCfg = Debug|x64
 		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Debug|x64.Build.0 = Debug|x64
-		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Release|x64.ActiveCfg = Release|Any CPU
-		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Release|x64.Build.0 = Release|Any CPU
+		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Release|x64.ActiveCfg = Release|x64
+		{E0D77F93-E88C-4B61-AA03-E54AFA909EC8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
