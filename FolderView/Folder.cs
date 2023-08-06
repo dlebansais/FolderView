@@ -9,7 +9,7 @@ using System.Collections.Generic;
 /// <param name="Name">The folder name.</param>
 /// <param name="Folders">The list of folders in this folder.</param>
 /// <param name="Files">The list of files in this folder.</param>
-public record Folder(Folder? Parent, string Name, IList<Folder> Folders, IList<File> Files)
+public record Folder(Folder? Parent, string Name, FolderCollection Folders, FileCollection Files)
 {
     /// <summary>
     /// Gets a value indicating whether this folder is the root folder.

@@ -9,6 +9,9 @@ dotnet_diagnostic.SA1312.severity = none
 # SA1503: Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = suggestion
 
+# SA1519: Braces should not be omitted from multi-line child statement
+dotnet_diagnostic.SA1519.severity = suggestion
+
 # SA1615: Element return value should be documented
 dotnet_diagnostic.SA1615.severity = suggestion
 

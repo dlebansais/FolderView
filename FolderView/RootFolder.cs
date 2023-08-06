@@ -35,9 +35,9 @@ public record RootFolder : Folder
         throw new NotImplementedException();
     }
 
-    private static List<Folder> GetSubfolderList(Uri rootUri)
+    private static FolderCollection GetSubfolderList(Uri rootUri)
     {
-        List<Folder> Result = new();
+        FolderCollection Result = new();
 
         if (TryParseAsLocal(rootUri, out string LocalRoot))
             Result = GetSubfolderList(null, LocalRoot);
@@ -47,17 +47,17 @@ public record RootFolder : Folder
         return Result;
     }
 
-    private static List<Folder> GetSubfolderList(Folder? parent, string localPath)
+    private static FolderCollection GetSubfolderList(Folder? parent, string localPath)
     {
-        List<Folder> Result = new();
+        FolderCollection Result = new();
 
         var Directories = Directory.GetDirectories(localPath);
 
         foreach (var Directory in Directories)
         {
             string Name = System.IO.Path.GetFileName(Directory);
-            List<Folder> Folders = GetSubfolderList(parent, Directory);
-            List<File> Files = GetFileList(parent, Directory);
+            FolderCollection Folders = GetSubfolderList(parent, Directory);
+            FileCollection Files = GetFileList(parent, Directory);
 
             Folder NewFolder = new(parent, Name, Folders, Files);
             Result.Add(NewFolder);
@@ -66,9 +66,9 @@ public record RootFolder : Folder
         return Result;
     }
 
-    private static List<File> GetFileList(Uri rootUri)
+    private static FileCollection GetFileList(Uri rootUri)
     {
-        List<File> Result = new();
+        FileCollection Result = new();
 
         if (TryParseAsLocal(rootUri, out string LocalRoot))
             Result = GetFileList(null, LocalRoot);
@@ -78,9 +78,9 @@ public record RootFolder : Folder
         return Result;
     }
 
-    private static List<File> GetFileList(Folder? parent, string localPath)
+    private static FileCollection GetFileList(Folder? parent, string localPath)
     {
-        List<File> Result = new();
+        FileCollection Result = new();
 
         var FileNames = Directory.GetFiles(localPath);
 
