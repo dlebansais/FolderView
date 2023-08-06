@@ -1,7 +1,6 @@
 ﻿namespace FolderView;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 /// <summary>
@@ -16,6 +15,8 @@ public record RootFolder : Folder
     public RootFolder(Uri rootUri)
         : base(null, string.Empty, GetSubfolderList(rootUri), GetFileList(rootUri))
     {
+        Folders = Folders.WithParent(this);
+        Files = Files.WithParent(this);
     }
 
     private static bool TryParseAsLocal(Uri rootUri, out string localRoot)
@@ -40,14 +41,14 @@ public record RootFolder : Folder
         FolderCollection Result = new();
 
         if (TryParseAsLocal(rootUri, out string LocalRoot))
-            Result = GetSubfolderList(null, LocalRoot);
+            Result = GetSubfolderList(LocalRoot);
         else if (TryParseAsRemote(rootUri, out string RemoteRoot))
-            Result = GetSubfolderList(null, RemoteRoot);
+            Result = GetSubfolderList(RemoteRoot);
 
         return Result;
     }
 
-    private static FolderCollection GetSubfolderList(Folder? parent, string localPath)
+    private static FolderCollection GetSubfolderList(string localPath)
     {
         FolderCollection Result = new();
 
@@ -56,10 +57,10 @@ public record RootFolder : Folder
         foreach (var Directory in Directories)
         {
             string Name = System.IO.Path.GetFileName(Directory);
-            FolderCollection Folders = GetSubfolderList(parent, Directory);
-            FileCollection Files = GetFileList(parent, Directory);
+            FolderCollection Folders = GetSubfolderList(Directory);
+            FileCollection Files = GetFileList(Directory);
 
-            Folder NewFolder = new(parent, Name, Folders, Files);
+            Folder NewFolder = new(null, Name, Folders, Files);
             Result.Add(NewFolder);
         }
 
@@ -71,14 +72,14 @@ public record RootFolder : Folder
         FileCollection Result = new();
 
         if (TryParseAsLocal(rootUri, out string LocalRoot))
-            Result = GetFileList(null, LocalRoot);
+            Result = GetFileList(LocalRoot);
         else if (TryParseAsRemote(rootUri, out string RemoteRoot))
-            Result = GetFileList(null, RemoteRoot);
+            Result = GetFileList(RemoteRoot);
 
         return Result;
     }
 
-    private static FileCollection GetFileList(Folder? parent, string localPath)
+    private static FileCollection GetFileList(string localPath)
     {
         FileCollection Result = new();
 
@@ -87,8 +88,8 @@ public record RootFolder : Folder
         foreach (var FileName in FileNames)
         {
             string Name = System.IO.Path.GetFileName(FileName);
+            File NewFile = new(null, Name);
 
-            File NewFile = new(parent, Name);
             Result.Add(NewFile);
         }
 

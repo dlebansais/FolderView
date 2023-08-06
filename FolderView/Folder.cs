@@ -1,7 +1,5 @@
 ﻿namespace FolderView;
 
-using System.Collections.Generic;
-
 /// <summary>
 /// Represents a folder.
 /// </summary>
