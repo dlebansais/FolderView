@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Represents a collection of files.
 /// </summary>
-public class FileCollection : List<File>
+internal class FileCollection : List<IFile>, IFileCollection
 {
     /// <summary>
     /// Sets the parent for all files in the collection and return a new collection.

@@ -5,10 +5,10 @@
 /// </summary>
 /// <param name="Parent">The parent folder.</param>
 /// <param name="Name">The file name.</param>
-public record File(Folder? Parent, string Name)
+internal record File(IFolder? Parent, string Name) : IFile
 {
     /// <summary>
     /// Gets the path to the file.
     /// </summary>
-    public Path Path { get; } = Path.Combine(Parent, Name);
+    public IPath Path { get; } = FolderView.Path.Combine(Parent, Name);
 }

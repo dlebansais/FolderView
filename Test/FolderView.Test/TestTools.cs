@@ -38,13 +38,13 @@ public static class TestTools
         return CurrentDirectory!;
     }
 
-    public static List<string> AsNameList(this IList<Folder> folders)
+    public static List<string> AsNameList(this IFolderCollection folders)
     {
-        return folders.Select(item => item.Name).ToList();
+        return ((IList<IFolder>)folders).Select(item => item.Name).ToList();
     }
 
-    public static List<string> AsNameList(this IList<File> files)
+    public static List<string> AsNameList(this IFileCollection files)
     {
-        return files.Select(item => item.Name).ToList();
+        return ((IList<IFile>)files).Select(item => item.Name).ToList();
     }
 }

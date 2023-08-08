@@ -1,5 +1,6 @@
 ﻿namespace FolderView;
 
+using System;
 using System.Collections.Generic;
 using NotFoundException = System.IO.FileNotFoundException;
 
@@ -8,7 +9,7 @@ using NotFoundException = System.IO.FileNotFoundException;
 /// </summary>
 /// <param name="Ancestors">The list of ancestor folders.</param>
 /// <param name="Name">The name of the folder or file.</param>
-public record Path(IList<string> Ancestors, string Name)
+public record Path(IList<string> Ancestors, string Name) : IPath
 {
     /// <summary>
     /// Defines the ancestor string in path.
@@ -16,11 +17,20 @@ public record Path(IList<string> Ancestors, string Name)
     public const string Ancestor = "..";
 
     /// <summary>
+    /// Gets a root folder from a local path or remote address.
+    /// </summary>
+    /// <param name="uri">The path or address to the root.</param>
+    public static IFolder RootFolderFrom(Uri uri)
+    {
+        return new RootFolder(uri);
+    }
+
+    /// <summary>
     /// Combines a parent path and a name to return the path to that name.
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name in the parent's path.</param>
-    public static Path Combine(Folder? parent, string name)
+    public static IPath Combine(IFolder? parent, string name)
     {
         if (parent is null)
         {
@@ -39,10 +49,10 @@ public record Path(IList<string> Ancestors, string Name)
     /// </summary>
     /// <param name="parent">The parent folder, <see langword="null"/> for the root folder.</param>
     /// <param name="path">The path.</param>
-    public static Folder GetRelativeFolder(Folder parent, Path path)
+    public static IFolder GetRelativeFolder(IFolder parent, Path path)
     {
-        Folder AncestorFolder = NavigateAncestors(parent, path);
-        Folder Result = AncestorFolder.Folders.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
+        IFolder AncestorFolder = NavigateAncestors(parent, path);
+        IFolder Result = AncestorFolder.Folders.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
         return Result;
     }
@@ -52,17 +62,17 @@ public record Path(IList<string> Ancestors, string Name)
     /// </summary>
     /// <param name="parent">The parent folder, <see langword="null"/> for the root folder.</param>
     /// <param name="path">The path.</param>
-    public static File GetRelativeFile(Folder parent, Path path)
+    public static IFile GetRelativeFile(IFolder parent, IPath path)
     {
-        Folder AncestorFolder = NavigateAncestors(parent, path);
-        File Result = AncestorFolder.Files.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
+        IFolder AncestorFolder = NavigateAncestors(parent, path);
+        IFile Result = AncestorFolder.Files.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
         return Result;
     }
 
-    private static Folder NavigateAncestors(Folder parent, Path path)
+    private static IFolder NavigateAncestors(IFolder parent, IPath path)
     {
-        Folder CurrentFolder = parent;
+        IFolder CurrentFolder = parent;
 
         foreach (string Name in path.Ancestors)
             CurrentFolder = Name == Ancestor

@@ -7,7 +7,7 @@
 /// <param name="Name">The folder name.</param>
 /// <param name="Folders">The list of folders in this folder.</param>
 /// <param name="Files">The list of files in this folder.</param>
-public record Folder(Folder? Parent, string Name, FolderCollection Folders, FileCollection Files)
+internal record Folder(IFolder? Parent, string Name, IFolderCollection Folders, IFileCollection Files) : IFolder
 {
     /// <summary>
     /// Gets a value indicating whether this folder is the root folder.
@@ -17,5 +17,5 @@ public record Folder(Folder? Parent, string Name, FolderCollection Folders, File
     /// <summary>
     /// Gets the path to the folder.
     /// </summary>
-    public Path Path { get; } = Path.Combine(Parent, Name);
+    public IPath Path { get; } = FolderView.Path.Combine(Parent, Name);
 }

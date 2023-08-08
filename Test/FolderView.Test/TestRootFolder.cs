@@ -11,7 +11,7 @@ public class TestRootFolder
     {
         Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
 
-        var TestObject = new RootFolder(LocalUri);
+        var TestObject = Path.RootFolderFrom(LocalUri);
         AssertRootFolderStructure(TestObject);
     }
 
@@ -20,11 +20,11 @@ public class TestRootFolder
     {
         Uri RemoteUri = RootFolderStructure.GetRootAsRemoteUri();
 
-        var TestObject = new RootFolder(RemoteUri);
+        var TestObject = Path.RootFolderFrom(RemoteUri);
         AssertRootFolderStructure(TestObject);
     }
 
-    private void AssertRootFolderStructure(RootFolder rootFolder)
+    private void AssertRootFolderStructure(IFolder rootFolder)
     {
         Assert.That(rootFolder, Is.Not.Null);
 

@@ -12,7 +12,7 @@ public class TestFile
     {
         Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
 
-        var RootFolder = new RootFolder(LocalUri);
+        var RootFolder = Path.RootFolderFrom(LocalUri);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;
@@ -26,15 +26,15 @@ public class TestFile
         TestRootNoMoreFile(RootFiles, 2);
     }
 
-    private void TestRootFile(IList<File> rootFiles, int index)
+    private void TestRootFile(IFileCollection rootFiles, int index)
     {
-        File TestObject = rootFiles[index];
+        IFile TestObject = rootFiles[index];
         Assert.That(TestObject, Is.Not.Null);
 
         Assert.That(TestObject.Name, Is.EqualTo(RootFolderStructure.RootFiles[index]));
     }
 
-    private void TestRootNoMoreFile(IList<File> rootFiles, int index)
+    private void TestRootNoMoreFile(IFileCollection rootFiles, int index)
     {
         Assert.That(rootFiles, Has.Count.EqualTo(index));
     }

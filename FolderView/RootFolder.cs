@@ -6,7 +6,7 @@ using System.IO;
 /// <summary>
 /// Provides a view of the root folder in a folder structure.
 /// </summary>
-public record RootFolder : Folder
+internal record RootFolder : Folder
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RootFolder"/> class.
@@ -15,8 +15,8 @@ public record RootFolder : Folder
     public RootFolder(Uri rootUri)
         : base(null, string.Empty, GetSubfolderList(rootUri), GetFileList(rootUri))
     {
-        Folders = Folders.WithParent(this);
-        Files = Files.WithParent(this);
+        Folders = ((FolderCollection)Folders).WithParent(this);
+        Files = ((FileCollection)Files).WithParent(this);
     }
 
     private static bool TryParseAsLocal(Uri rootUri, out string localRoot)
