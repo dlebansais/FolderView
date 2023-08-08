@@ -19,10 +19,10 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// <summary>
     /// Gets a root folder from a local path or remote address.
     /// </summary>
-    /// <param name="uri">The path or address to the root.</param>
-    public static IFolder RootFolderFrom(Uri uri)
+    /// <param name="location">The location of the root.</param>
+    public static IFolder RootFolderFrom(ILocation location)
     {
-        return new RootFolder(uri);
+        return new RootFolder(location);
     }
 
     /// <summary>

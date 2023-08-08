@@ -9,18 +9,18 @@ public class TestRootFolder
     [Test]
     public void CreateWithLocalUri()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var TestObject = Path.RootFolderFrom(LocalUri);
+        var TestObject = Path.RootFolderFrom(Location);
         AssertRootFolderStructure(TestObject);
     }
 
-    //[Test]
+    [Test]
     public void CreateWithRemoteUri()
     {
-        Uri RemoteUri = RootFolderStructure.GetRootAsRemoteUri();
+        ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
 
-        var TestObject = Path.RootFolderFrom(RemoteUri);
+        var TestObject = Path.RootFolderFrom(Location);
         AssertRootFolderStructure(TestObject);
     }
 
@@ -32,12 +32,12 @@ public class TestRootFolder
         var TestObjectFolderNames = TestObjectFolders.AsNameList();
 
         Assert.That(TestObjectFolderNames, Has.Count.EqualTo(RootFolderStructure.RootFolders.Count));
-        CollectionAssert.AreEqual(TestObjectFolderNames, RootFolderStructure.RootFolders);
+        CollectionAssert.AreEquivalent(TestObjectFolderNames, RootFolderStructure.RootFolders);
 
         var TestObjectFiles = rootFolder.Files;
         var TestObjectFileNames = TestObjectFiles.AsNameList();
 
         Assert.That(TestObjectFileNames, Has.Count.EqualTo(RootFolderStructure.RootFiles.Count));
-        CollectionAssert.AreEqual(TestObjectFileNames, RootFolderStructure.RootFiles);
+        CollectionAssert.AreEquivalent(TestObjectFileNames, RootFolderStructure.RootFiles);
     }
 }

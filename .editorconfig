@@ -9,6 +9,9 @@ dotnet_diagnostic.SA1312.severity = none
 # SA1503: Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = suggestion
 
+# SA1405: Debug.Assert should provide message text
+dotnet_diagnostic.SA1405.severity = suggestion
+
 # SA1519: Braces should not be omitted from multi-line child statement
 dotnet_diagnostic.SA1519.severity = suggestion
 

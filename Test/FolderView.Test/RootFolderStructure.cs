@@ -24,23 +24,24 @@ public static class RootFolderStructure
     public static List<string> Folder_0_2_Files { get; } = new() { "File_0.txt" };
 
     private const string LocalFolderStructureName = "TestRootFolder";
-    private const string GitHubProjectUri = "https://github.com/dlebansais/FolderView/";
+    private const string GitHubProjectUserName = "dlebansais";
+    private const string GitHubProjectRepositoryName = "FolderView";
 
-    public static Uri GetRootAsLocalUri()
+    public static ILocation GetRootAsLocalLocation()
     {
         string TestProjectRoot = TestTools.GetExecutingProjectRootPath();
         string TestRoot = System.IO.Path.GetDirectoryName(TestProjectRoot)!;
         string LocalUriString = System.IO.Path.Combine(TestRoot, LocalFolderStructureName);
-        Uri LocalUri = new(LocalUriString);
+        LocalLocation LocalLocation = new(LocalUriString);
 
-        return LocalUri;
+        return LocalLocation;
     }
 
-    public static Uri GetRootAsRemoteUri()
+    public static ILocation GetRootAsRemoteLocation()
     {
-        string RemoteUriString = $"{GitHubProjectUri}/Test/{LocalFolderStructureName}";
-        Uri RemoteUri = new(RemoteUriString);
+        string RemoteRoot = $"Test/{LocalFolderStructureName}";
+        GitHubLocation RemoteLocation = new(GitHubProjectUserName, GitHubProjectRepositoryName, RemoteRoot);
 
-        return RemoteUri;
+        return RemoteLocation;
     }
 }

@@ -10,14 +10,14 @@ public class TestFile
     [Test]
     public void TestWithLocalUri()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;
         var RootFileNames = RootFiles.AsNameList();
-        CollectionAssert.AreEqual(RootFileNames, RootFolderStructure.RootFiles);
+        CollectionAssert.AreEquivalent(RootFileNames, RootFolderStructure.RootFiles);
 
         Assert.That(RootFiles, Has.Count.EqualTo(RootFolderStructure.RootFiles.Count));
 

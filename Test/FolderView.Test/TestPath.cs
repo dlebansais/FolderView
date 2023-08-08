@@ -10,9 +10,9 @@ public class TestPath
     [Test]
     public void TestFirstLevelFolder()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
@@ -25,9 +25,9 @@ public class TestPath
     [Test]
     public void TestFirstLevelFile()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
@@ -40,9 +40,9 @@ public class TestPath
     [Test]
     public void TestSecondLevelFolder()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
@@ -55,9 +55,9 @@ public class TestPath
     [Test]
     public void TestSecondLevelFile()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path SecondLevelFilePath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Files[0]);
@@ -70,9 +70,9 @@ public class TestPath
     [Test]
     public void TestAncestorLevelFolder()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
@@ -86,9 +86,9 @@ public class TestPath
     [Test]
     public void TestAncestorLevelFile()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);

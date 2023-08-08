@@ -1,7 +1,10 @@
 ﻿namespace FolderView;
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using Octokit;
 
 /// <summary>
 /// Provides a view of the root folder in a folder structure.
@@ -11,19 +14,19 @@ internal record RootFolder : Folder
     /// <summary>
     /// Initializes a new instance of the <see cref="RootFolder"/> class.
     /// </summary>
-    /// <param name="rootUri">The path or address to the root.</param>
-    public RootFolder(Uri rootUri)
-        : base(null, string.Empty, GetSubfolderList(rootUri), GetFileList(rootUri))
+    /// <param name="location">The path or address to the root.</param>
+    public RootFolder(ILocation location)
+        : base(null, string.Empty, GetSubfolderList(location), GetFileList(location))
     {
         Folders = ((FolderCollection)Folders).WithParent(this);
         Files = ((FileCollection)Files).WithParent(this);
     }
 
-    private static bool TryParseAsLocal(Uri rootUri, out string localRoot)
+    private static bool TryParseAsLocal(ILocation location, out string localRoot)
     {
-        if (rootUri.IsFile)
+        if (location is LocalLocation AsLocal)
         {
-            localRoot = rootUri.LocalPath;
+            localRoot = AsLocal.LocalRoot;
             return true;
         }
 
@@ -31,19 +34,36 @@ internal record RootFolder : Folder
         return false;
     }
 
-    private static bool TryParseAsRemote(Uri rootUri, out string remoteRoot)
+    private static bool TryParseAsRemote(ILocation location, out GitHubClient client, out GitHubLocation remoteLocation, out IReadOnlyList<RepositoryContent> remoteRoot)
     {
-        throw new NotImplementedException();
+        if (location is GitHubLocation AsRemoteLocation)
+        {
+            string? AppName = typeof(RootFolder).Assembly.GetName().Name;
+            Debug.Assert(AppName is not null);
+
+            client = new GitHubClient(new ProductHeaderValue(AppName));
+            var Contents = client.Repository.Content.GetAllContents(AsRemoteLocation.UserName, AsRemoteLocation.RepositoryName, AsRemoteLocation.RemoteRoot);
+            Contents.Wait();
+
+            remoteLocation = AsRemoteLocation;
+            remoteRoot = Contents.Result;
+            return true;
+        }
+
+        client = null!;
+        remoteLocation = null!;
+        remoteRoot = null!;
+        return false;
     }
 
-    private static FolderCollection GetSubfolderList(Uri rootUri)
+    private static FolderCollection GetSubfolderList(ILocation location)
     {
         FolderCollection Result = new();
 
-        if (TryParseAsLocal(rootUri, out string LocalRoot))
+        if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetSubfolderList(LocalRoot);
-        else if (TryParseAsRemote(rootUri, out string RemoteRoot))
-            Result = GetSubfolderList(RemoteRoot);
+        else if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
+            Result = GetSubfolderList(Client, RemoteLocation, RemoteRoot);
 
         return Result;
     }
@@ -67,14 +87,37 @@ internal record RootFolder : Folder
         return Result;
     }
 
-    private static FileCollection GetFileList(Uri rootUri)
+    private static FolderCollection GetSubfolderList(GitHubClient client, GitHubLocation remoteLocation, IReadOnlyList<RepositoryContent> remoteContent)
+    {
+        FolderCollection Result = new();
+
+        foreach (var RepositoryContent in remoteContent)
+            if (RepositoryContent.Type.TryParse(out ContentType Type) && Type == ContentType.Dir)
+            {
+                string Name = RepositoryContent.Name;
+
+                var Contents = client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, RepositoryContent.Path);
+                Contents.Wait();
+                IReadOnlyList<RepositoryContent> SubContent = Contents.Result;
+
+                FolderCollection Folders = GetSubfolderList(client, remoteLocation, SubContent);
+                FileCollection Files = GetFileList(client, remoteLocation, SubContent);
+
+                Folder NewFolder = new(null, Name, Folders, Files);
+                Result.Add(NewFolder);
+            }
+
+        return Result;
+    }
+
+    private static FileCollection GetFileList(ILocation location)
     {
         FileCollection Result = new();
 
-        if (TryParseAsLocal(rootUri, out string LocalRoot))
+        if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetFileList(LocalRoot);
-        else if (TryParseAsRemote(rootUri, out string RemoteRoot))
-            Result = GetFileList(RemoteRoot);
+        else if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
+            Result = GetFileList(Client, RemoteLocation, RemoteRoot);
 
         return Result;
     }
@@ -92,6 +135,22 @@ internal record RootFolder : Folder
 
             Result.Add(NewFile);
         }
+
+        return Result;
+    }
+
+    private static FileCollection GetFileList(GitHubClient client, GitHubLocation remoteLocation, IReadOnlyList<RepositoryContent> remoteContent)
+    {
+        FileCollection Result = new();
+
+        foreach (var RepositoryContent in remoteContent)
+            if (RepositoryContent.Type.TryParse(out ContentType Type) && Type == ContentType.File)
+            {
+                string Name = RepositoryContent.Name;
+                File NewFile = new(null, Name);
+
+                Result.Add(NewFile);
+            }
 
         return Result;
     }

@@ -10,14 +10,14 @@ public class TestFolder
     [Test]
     public void TestWithLocalUri()
     {
-        Uri LocalUri = RootFolderStructure.GetRootAsLocalUri();
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(LocalUri);
+        var RootFolder = Path.RootFolderFrom(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
-        CollectionAssert.AreEqual(RootFolderNames, RootFolderStructure.RootFolders);
+        CollectionAssert.AreEquivalent(RootFolderNames, RootFolderStructure.RootFolders);
 
         Assert.That(RootSubfolders, Has.Count.EqualTo(RootFolderStructure.RootFolders.Count));
 
@@ -35,10 +35,10 @@ public class TestFolder
         Assert.That(TestObject.Name, Is.EqualTo(RootFolderStructure.RootFolders[index]));
 
         var TestObjectFolderNames = TestObject.Folders.AsNameList();
-        CollectionAssert.AreEqual(TestObjectFolderNames, folderNames);
+        CollectionAssert.AreEquivalent(TestObjectFolderNames, folderNames);
 
         var TestObjectFileNames = TestObject.Files.AsNameList();
-        CollectionAssert.AreEqual(TestObjectFileNames, fileNames);
+        CollectionAssert.AreEquivalent(TestObjectFileNames, fileNames);
     }
 
     private void TestRootNoMoreFolder(IFolderCollection rootSubfolders, int index)
