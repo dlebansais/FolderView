@@ -3,12 +3,9 @@
 /// <summary>
 /// Represents a file.
 /// </summary>
-/// <param name="Parent">The parent folder.</param>
-/// <param name="Name">The file name.</param>
+/// <inheritdoc/>
 internal record File(IFolder? Parent, string Name) : IFile
 {
-    /// <summary>
-    /// Gets the path to the file.
-    /// </summary>
+    /// <inheritdoc/>
     public IPath Path { get; } = FolderView.Path.Combine(Parent, Name);
 }

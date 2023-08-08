@@ -1,6 +1,5 @@
 ﻿namespace FolderView.Test;
 
-using System;
 using NUnit.Framework;
 
 [TestFixture]

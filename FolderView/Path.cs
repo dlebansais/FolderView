@@ -1,14 +1,12 @@
 ﻿namespace FolderView;
 
-using System;
 using System.Collections.Generic;
 using NotFoundException = System.IO.FileNotFoundException;
 
 /// <summary>
 /// Represents the path from the root to a folder or file.
 /// </summary>
-/// <param name="Ancestors">The list of ancestor folders.</param>
-/// <param name="Name">The name of the folder or file.</param>
+/// <inheritdoc/>
 public record Path(IList<string> Ancestors, string Name) : IPath
 {
     /// <summary>

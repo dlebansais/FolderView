@@ -16,7 +16,7 @@ internal record RootFolder : Folder
     /// </summary>
     /// <param name="location">The path or address to the root.</param>
     public RootFolder(ILocation location)
-        : base(null, string.Empty, GetSubfolderList(location), GetFileList(location))
+        : base(null, ValidateLocationOrThrow(location), GetSubfolderList(location), GetFileList(location))
     {
         Folders = ((FolderCollection)Folders).WithParent(this);
         Files = ((FileCollection)Files).WithParent(this);
@@ -54,6 +54,15 @@ internal record RootFolder : Folder
         remoteLocation = null!;
         remoteRoot = null!;
         return false;
+    }
+
+    private static string ValidateLocationOrThrow(ILocation location)
+    {
+        if (!TryParseAsLocal(location, out _) &&
+            !TryParseAsRemote(location, out _, out _, out _))
+            throw new ArgumentException(nameof(location));
+
+        return string.Empty;
     }
 
     private static FolderCollection GetSubfolderList(ILocation location)
