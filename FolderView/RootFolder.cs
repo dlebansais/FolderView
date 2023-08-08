@@ -67,12 +67,15 @@ internal record RootFolder : Folder
 
     private static FolderCollection GetSubfolderList(ILocation location)
     {
-        FolderCollection Result = new();
+        FolderCollection? Result = new();
 
         if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetSubfolderList(LocalRoot);
-        else if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
+
+        if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
             Result = GetSubfolderList(Client, RemoteLocation, RemoteRoot);
+
+        Debug.Assert(Result is not null);
 
         return Result;
     }
@@ -125,8 +128,11 @@ internal record RootFolder : Folder
 
         if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetFileList(LocalRoot);
-        else if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
+
+        if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
             Result = GetFileList(Client, RemoteLocation, RemoteRoot);
+
+        Debug.Assert(Result is not null);
 
         return Result;
     }
