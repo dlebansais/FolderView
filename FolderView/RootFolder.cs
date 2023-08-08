@@ -104,7 +104,11 @@ internal record RootFolder : Folder
         FolderCollection Result = new();
 
         foreach (var RepositoryContent in remoteContent)
-            if (RepositoryContent.Type.TryParse(out ContentType Type) && Type == ContentType.Dir)
+        {
+            bool ParseSuccess = RepositoryContent.Type.TryParse(out ContentType Type);
+            Debug.Assert(ParseSuccess);
+
+            if (Type == ContentType.Dir)
             {
                 string Name = RepositoryContent.Name;
 
@@ -118,6 +122,7 @@ internal record RootFolder : Folder
                 Folder NewFolder = new(null, Name, Folders, Files);
                 Result.Add(NewFolder);
             }
+        }
 
         return Result;
     }
@@ -159,13 +164,18 @@ internal record RootFolder : Folder
         FileCollection Result = new();
 
         foreach (var RepositoryContent in remoteContent)
-            if (RepositoryContent.Type.TryParse(out ContentType Type) && Type == ContentType.File)
+        {
+            bool ParseSuccess = RepositoryContent.Type.TryParse(out ContentType Type);
+            Debug.Assert(ParseSuccess);
+
+            if (Type == ContentType.File)
             {
                 string Name = RepositoryContent.Name;
                 File NewFile = new(null, Name);
 
                 Result.Add(NewFile);
             }
+        }
 
         return Result;
     }
