@@ -31,7 +31,7 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     }
 
     /// <summary>
-    /// Combines a parent path and a name to return the path to that name.
+    /// Combines a parent folder and a name to return the path to that name.
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name in the parent's path.</param>
@@ -49,10 +49,28 @@ public record Path(IList<string> Ancestors, string Name) : IPath
         }
         else
         {
-            List<string> ParentNameList = new(parent.Path.Ancestors) { parent.Name };
+            List<string> ParentNameList = parent.Name == string.Empty ? new(parent.Path.Ancestors) : new(parent.Path.Ancestors) { parent.Name };
 
             Result = new Path(ParentNameList, name);
         }
+
+        Result.EnsureNotNull();
+        return Result;
+    }
+
+    /// <summary>
+    /// Combines a parent path and a name to return the path to that name.
+    /// </summary>
+    /// <param name="parent">The parent path.</param>
+    /// <param name="name">The name in the parent path.</param>
+    public static IPath Combine(IPath parent, string name)
+    {
+        parent.MustBeNotNull();
+        parent.MustBeValid();
+        name.MustBeNotNull();
+
+        List<string> ParentNameList = new(parent.Ancestors) { parent.Name };
+        IPath Result = new Path(ParentNameList, name);
 
         Result.EnsureNotNull();
         return Result;

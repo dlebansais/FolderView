@@ -1,4 +1,4 @@
-﻿namespace FolderView;
+﻿namespace FolderView.Test;
 
 internal record FakeFolder(IFolder? Parent, string Name, IFolderCollection Folders, IFileCollection Files) : IFolder
 {

@@ -8,6 +8,52 @@ using NUnit.Framework;
 public class TestPath
 {
     [Test]
+    public void TestCombineFolder()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+        IPath CombineResult;
+
+        var RootFolder = Path.RootFolderFrom(Location);
+        Assert.That(RootFolder, Is.Not.Null);
+
+        IFolder? NullFolder = null;
+        CombineResult = Path.Combine(NullFolder, RootFolderStructure.RootFolders[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(0));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.RootFolders[0]));
+
+        CombineResult = Path.Combine(RootFolder, RootFolderStructure.RootFolders[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(0));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.RootFolders[0]));
+
+        Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
+        IFolder FirstLevelFolder = Path.GetRelativeFolder(RootFolder, FirstLevelFolderPath);
+
+        CombineResult = Path.Combine(FirstLevelFolder, RootFolderStructure.Folder_0_0_Folders[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(1));
+        Assert.That(CombineResult.Ancestors[0], Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.Folder_0_0_Folders[0]));
+    }
+
+    [Test]
+    public void TestCombinePath()
+    {
+        IFolder? NullFolder = null;
+        IPath FirstLevelPath = Path.Combine(NullFolder, RootFolderStructure.RootFolders[0]);
+
+        Assert.That(FirstLevelPath.Ancestors, Has.Count.EqualTo(0));
+        Assert.That(FirstLevelPath.Name, Is.EqualTo(RootFolderStructure.RootFolders[0]));
+
+        IPath SecondLevelPath = Path.Combine(FirstLevelPath, RootFolderStructure.Folder_0_0_Folders[0]);
+
+        Assert.That(SecondLevelPath.Ancestors, Has.Count.EqualTo(1));
+        Assert.That(SecondLevelPath.Ancestors[0], Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(SecondLevelPath.Name, Is.EqualTo(RootFolderStructure.Folder_0_0_Folders[0]));
+    }
+
+    [Test]
     public void TestFirstLevelFolder()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
@@ -115,8 +161,13 @@ public class TestPath
         Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(null!));
         Assert.That(Exception.Message, Is.EqualTo("location"));
 
-        Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(null, null!));
+        IFolder? NullFolder = null;
+        Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(NullFolder, null!));
         Assert.That(Exception.Message, Is.EqualTo("name"));
+
+        IPath? NullPath = null!;
+        Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(NullPath, string.Empty));
+        Assert.That(Exception.Message, Is.EqualTo("parent"));
 
         Exception = Assert.Throws<NullReferenceException>(() => Path.GetRelativeFolder(null!, FirstLevelFolderPath));
         Assert.That(Exception.Message, Is.EqualTo("parent"));
@@ -212,6 +263,8 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain(nameof(IPath)));
 
         var FileFakePath = new FakePath(new List<string>(), RootFolderStructure.RootFiles[0]);
+        Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FileFakePath, string.Empty));
+        Assert.That(Exception.Message, Does.Contain(nameof(IPath)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(FakeFolder, FirstLevelFilePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolder)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(RootFolder, FileFakePath));

@@ -1,6 +1,5 @@
 ﻿namespace FolderView;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +15,7 @@ internal record RootFolder : Folder
     /// </summary>
     /// <param name="location">The path or address to the root.</param>
     public RootFolder(ILocation location)
-        : base(null, ValidateLocationOrThrow(location), GetSubfolderList(location), GetFileList(location))
+        : base(null, string.Empty, GetSubfolderList(location), GetFileList(location))
     {
         Folders = ((FolderCollection)Folders).WithParent(this);
         Files = ((FileCollection)Files).WithParent(this);
@@ -56,18 +55,9 @@ internal record RootFolder : Folder
         return false;
     }
 
-    private static string ValidateLocationOrThrow(ILocation location)
-    {
-        if (!TryParseAsLocal(location, out _) &&
-            !TryParseAsRemote(location, out _, out _, out _))
-            throw new ArgumentException(nameof(location));
-
-        return string.Empty;
-    }
-
     private static FolderCollection GetSubfolderList(ILocation location)
     {
-        FolderCollection? Result = new();
+        FolderCollection? Result = null;
 
         if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetSubfolderList(LocalRoot);
@@ -129,7 +119,7 @@ internal record RootFolder : Folder
 
     private static FileCollection GetFileList(ILocation location)
     {
-        FileCollection Result = new();
+        FileCollection? Result = null;
 
         if (TryParseAsLocal(location, out string LocalRoot))
             Result = GetFileList(LocalRoot);
@@ -144,7 +134,7 @@ internal record RootFolder : Folder
 
     private static FileCollection GetFileList(string localPath)
     {
-        FileCollection Result = new();
+        FileCollection? Result = new();
 
         var FileNames = Directory.GetFiles(localPath);
 

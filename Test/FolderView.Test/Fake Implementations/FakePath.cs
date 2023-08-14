@@ -1,4 +1,4 @@
-﻿namespace FolderView;
+﻿namespace FolderView.Test;
 
 using System.Collections.Generic;
 
