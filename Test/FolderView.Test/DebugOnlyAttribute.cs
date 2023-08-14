@@ -1,6 +1,5 @@
 ﻿namespace NUnit.Framework;
 
-using System.Diagnostics;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -10,7 +9,13 @@ public class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
 
     public void ApplyToTest(Test test)
     {
-        if (!Debugger.IsAttached)
+#if DEBUG
+        bool IsDebuggerAttached = true;
+#else
+        bool IsDebuggerAttached = false;
+#endif
+
+        if (!IsDebuggerAttached)
         {
             test.RunState = RunState.Ignored;
             test.Properties.Set(PropertyNames.SkipReason, Reason);
