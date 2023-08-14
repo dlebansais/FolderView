@@ -9,16 +9,9 @@ public class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
 
     public void ApplyToTest(Test test)
     {
-#if DEBUG
-        bool IsDebuggerAttached = true;
-#else
-        bool IsDebuggerAttached = false;
+#if !DEBUG
+        test.RunState = RunState.Ignored;
+        test.Properties.Set(PropertyNames.SkipReason, Reason);
 #endif
-
-        if (!IsDebuggerAttached)
-        {
-            test.RunState = RunState.Ignored;
-            test.Properties.Set(PropertyNames.SkipReason, Reason);
-        }
     }
 }

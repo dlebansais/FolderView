@@ -24,25 +24,25 @@ public class TestLocation
 
         PropertyName = "LocalRoot";
         var LocationInvalidLocalRoot = RootFolderStructure.GetRootAsLocalLocation();
-        LocationInvalidLocalRoot.GetType()?.GetProperty(PropertyName)?.SetValue(LocationInvalidLocalRoot, null!);
+        LocationInvalidLocalRoot.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidLocalRoot, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(LocationInvalidLocalRoot));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "UserName";
         var LocationInvalidUserName = RootFolderStructure.GetRootAsRemoteLocation();
-        LocationInvalidUserName.GetType()?.GetProperty(PropertyName)?.SetValue(LocationInvalidUserName, null!);
+        LocationInvalidUserName.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidUserName, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(LocationInvalidUserName));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "RepositoryName";
         var LocationInvalidRepositoryName = RootFolderStructure.GetRootAsRemoteLocation();
-        LocationInvalidRepositoryName.GetType()?.GetProperty(PropertyName)?.SetValue(LocationInvalidRepositoryName, null!);
+        LocationInvalidRepositoryName.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidRepositoryName, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(LocationInvalidRepositoryName));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "RemoteRoot";
         var LocationInvalidRemoteRoot = RootFolderStructure.GetRootAsRemoteLocation();
-        LocationInvalidRemoteRoot.GetType()?.GetProperty(PropertyName)?.SetValue(LocationInvalidRemoteRoot, null!);
+        LocationInvalidRemoteRoot.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidRemoteRoot, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(LocationInvalidRemoteRoot));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
     }
