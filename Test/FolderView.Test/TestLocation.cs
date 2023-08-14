@@ -6,6 +6,7 @@ using NUnit.Framework;
 [TestFixture]
 public class TestLocation
 {
+    [DebugOnly]
     [Test]
     public void TestFake()
     {
@@ -14,6 +15,7 @@ public class TestLocation
         Assert.That(Exception.Message, Does.Contain(nameof(ILocation)));
     }
 
+    [DebugOnly]
     [Test]
     public void TestNull()
     {
