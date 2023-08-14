@@ -1,6 +1,7 @@
 ﻿namespace FolderView;
 
 using System.Collections.Generic;
+using Contracts;
 using NotFoundException = System.IO.FileNotFoundException;
 
 /// <summary>
@@ -20,7 +21,13 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// <param name="location">The location of the root.</param>
     public static IFolder RootFolderFrom(ILocation location)
     {
-        return new RootFolder(location);
+        location.MustBeNotNull();
+        location.MustBeValid();
+
+        IFolder Result = new RootFolder(location);
+
+        Result.EnsureNotNull();
+        return Result;
     }
 
     /// <summary>
@@ -30,16 +37,25 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// <param name="name">The name in the parent's path.</param>
     public static IPath Combine(IFolder? parent, string name)
     {
+        if (parent is not null)
+            parent.MustBeValid();
+        name.MustBeNotNull();
+
+        IPath Result;
+
         if (parent is null)
         {
-            return new Path(new List<string>(), name);
+            Result = new Path(new List<string>(), name);
         }
         else
         {
             List<string> ParentNameList = new(parent.Path.Ancestors) { parent.Name };
 
-            return new Path(ParentNameList, name);
+            Result = new Path(ParentNameList, name);
         }
+
+        Result.EnsureNotNull();
+        return Result;
     }
 
     /// <summary>
@@ -47,11 +63,17 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// </summary>
     /// <param name="parent">The parent folder, <see langword="null"/> for the root folder.</param>
     /// <param name="path">The path.</param>
-    public static IFolder GetRelativeFolder(IFolder parent, Path path)
+    public static IFolder GetRelativeFolder(IFolder parent, IPath path)
     {
+        parent.MustBeNotNull();
+        parent.MustBeValid();
+        path.MustBeNotNull();
+        path.MustBeValid();
+
         IFolder AncestorFolder = NavigateAncestors(parent, path);
         IFolder Result = AncestorFolder.Folders.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
+        Result.EnsureNotNull();
         return Result;
     }
 
@@ -62,9 +84,15 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// <param name="path">The path.</param>
     public static IFile GetRelativeFile(IFolder parent, IPath path)
     {
+        parent.MustBeNotNull();
+        parent.MustBeValid();
+        path.MustBeNotNull();
+        path.MustBeValid();
+
         IFolder AncestorFolder = NavigateAncestors(parent, path);
         IFile Result = AncestorFolder.Files.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
+        Result.EnsureNotNull();
         return Result;
     }
 
