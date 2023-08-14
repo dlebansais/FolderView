@@ -271,7 +271,7 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain(nameof(IPath)));
 
         var FolderInvalidFolders = Path.RootFolderFrom(Location);
-        FolderInvalidFolders.GetType().GetProperty("Folders")?.SetValue(FolderInvalidFolders, new FakeFolderCollection());
+        FolderInvalidFolders.GetType().GetProperty("Folders")!.SetValue(FolderInvalidFolders, new FakeFolderCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFolders, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFolder(FolderInvalidFolders, FirstLevelFolderPath));
@@ -280,7 +280,7 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
 
         var FolderInvalidFiles = Path.RootFolderFrom(Location);
-        FolderInvalidFiles.GetType().GetProperty("Files")?.SetValue(FolderInvalidFiles, new FakeFileCollection());
+        FolderInvalidFiles.GetType().GetProperty("Files")!.SetValue(FolderInvalidFiles, new FakeFileCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFiles, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFolder(FolderInvalidFiles, FirstLevelFolderPath));
