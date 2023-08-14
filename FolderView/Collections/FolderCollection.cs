@@ -17,8 +17,18 @@ internal class FolderCollection : List<IFolder>, IFolderCollection
 
         foreach (Folder Item in this)
         {
-            Folder ModifiedItem = Item with { Parent = parent };
-            ModifiedItem = ModifiedItem with { Folders = ((FolderCollection)ModifiedItem.Folders).WithParent(ModifiedItem), Files = ((FileCollection)ModifiedItem.Files).WithParent(ModifiedItem) };
+            // Ensure Parent is set.
+            Folder ModifiedItem = Item with
+            {
+                Parent = parent,
+            };
+
+            // Then update other fields.
+            ModifiedItem = ModifiedItem with
+            {
+                Folders = ((FolderCollection)ModifiedItem.Folders).WithParent(ModifiedItem),
+                Files = ((FileCollection)ModifiedItem.Files).WithParent(ModifiedItem),
+            };
 
             Result.Add(ModifiedItem);
         }

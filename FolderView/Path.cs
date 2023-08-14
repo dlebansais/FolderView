@@ -41,18 +41,13 @@ public record Path(IList<string> Ancestors, string Name) : IPath
             parent.MustBeValid();
         name.MustBeNotNull();
 
-        IPath Result;
+        List<string> ParentNameList = parent is null
+            ? new List<string>()
+            : parent.Name == string.Empty
+                ? new(parent.Path.Ancestors)
+                : new(parent.Path.Ancestors) { parent.Name };
 
-        if (parent is null)
-        {
-            Result = new Path(new List<string>(), name);
-        }
-        else
-        {
-            List<string> ParentNameList = parent.Name == string.Empty ? new(parent.Path.Ancestors) : new(parent.Path.Ancestors) { parent.Name };
-
-            Result = new Path(ParentNameList, name);
-        }
+        IPath Result = new Path(ParentNameList, name);
 
         Result.EnsureNotNull();
         return Result;

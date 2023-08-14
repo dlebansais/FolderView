@@ -8,24 +8,24 @@ Simple immutable view of a folder structure on disk or on the Internet.
 
 ## LocalLocation : ILocation
 
-| Name      | Type     | Comment |
-|-----------|----------|---------|
+| Name      | Type     | Comment                                 |
+|-----------|----------|-----------------------------------------|
 | LocalRoot | `string` | The path to the root folder of interest |
 
 ## GitHubLocation : ILocation
 
-| Name           | Type     | Comment |
-|----------------|----------|---------|
-| UserName       | `string` | The user name for repositories on GitHub |
-| RepositoryName | `string` | The repository name |
+| Name           | Type     | Comment                                                                  |
+|----------------|----------|--------------------------------------------------------------------------|
+| UserName       | `string` | The user name for repositories on GitHub                                 |
+| RepositoryName | `string` | The repository name                                                      |
 | RemoteRoot     | `string` | The path to the root folder in the repository, / for the repository root |
 
 ## Path : IPath
 
-| Name      | Type            | Comment |
-|-----------|-----------------|---------|
+| Name      | Type            | Comment                                                                                      |
+|-----------|-----------------|----------------------------------------------------------------------------------------------|
 | Ancestors | `IList<string>` | The list of ancestor folders, from the root to the folder, an empty list for the root folder |
-| Name      | `string`        | The name of a file or subfolder in the folder |
+| Name      | `string`        | The name of a file or subfolder in the folder                                                |
 
 ### RootFolderFrom
 Gets a root folder from a local path or remote address.
