@@ -99,6 +99,7 @@ public class TestPath
         Assert.That(GetResult, Is.EqualTo(RootFolder.Files[0]));
     }
 
+    [DebugOnly]
     [Test]
     public void TestNull()
     {
@@ -128,6 +129,7 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo("path"));
     }
 
+    [DebugOnly]
     [Test]
     public void TestInvalid()
     {
@@ -186,6 +188,7 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo(nameof(Path.Name)));
     }
 
+    [DebugOnly]
     [Test]
     public void TestFake()
     {
