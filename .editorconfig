@@ -3,6 +3,15 @@
 # SA1101: Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = suggestion
 
+# SA1201: Elements should appear in the correct order
+dotnet_diagnostic.SA1201.severity = suggestion
+
+# SA1306: Field names should begin with lower-case letter
+dotnet_diagnostic.SA1306.severity = none
+
+# SA1309: Field names should not begin with underscore
+dotnet_diagnostic.SA1309.severity = none
+
 # SA1312: Variable names should begin with lower-case letter
 dotnet_diagnostic.SA1312.severity = none
 
@@ -39,6 +48,7 @@ dotnet_naming_symbols.field_symbol_group.applicable_kinds = field
 
 ## Field naming style
 dotnet_naming_style.field_naming_style.capitalization = first_word_upper
+dotnet_naming_style.field_naming_style.required_prefix = _
 
 ## set group, style and violation severity
 dotnet_naming_rule.fields_are_first_word_upper.symbols = field_symbol_group
