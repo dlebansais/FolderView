@@ -33,45 +33,37 @@ internal record RootFolder : Folder
         FileCollection ResultFiles = new();
 
         if (location is LocalLocation AsLocal)
-        {
-            string LocalPath = AsLocal.LocalRoot;
-
-            var Directories = Directory.GetDirectories(LocalPath);
-
-            foreach (var Directory in Directories)
-            {
-                string Name = System.IO.Path.GetFileName(Directory);
-                FolderCollection Folders = GetSubfolderList(Directory);
-                FileCollection Files = GetFileList(Directory);
-
-                Folder NewFolder = new(null, Name, Folders, Files);
-                ResultFolders.Add(NewFolder);
-            }
-
-            var FileNames = Directory.GetFiles(LocalPath);
-
-            foreach (var FileName in FileNames)
-            {
-                string Name = System.IO.Path.GetFileName(FileName);
-                File NewFile = new(null, Name);
-
-                ResultFiles.Add(NewFile);
-            }
-        }
-
-        if (location is GitHubLocation AsRemoteLocation)
-        {
-            string? AppName = typeof(RootFolder).Assembly.GetName().Name;
-            Debug.Assert(AppName is not null);
-
-            GitHubClient Client = new GitHubClient(new ProductHeaderValue(AppName));
-            var Contents = await Client.Repository.Content.GetAllContents(AsRemoteLocation.UserName, AsRemoteLocation.RepositoryName, AsRemoteLocation.RemoteRoot);
-
-            ResultFolders = await GetSubfolderListAsync(Client, AsRemoteLocation, Contents);
-            ResultFiles = GetFileList(Client, AsRemoteLocation, Contents);
-        }
+            FillLocalFoldersAndFiles(AsLocal.LocalRoot, ResultFolders, ResultFiles);
+        else if (location is GitHubLocation AsRemoteLocation)
+            (ResultFolders, ResultFiles) = await ParseRemoteAsync(AsRemoteLocation);
 
         return (ResultFolders, ResultFiles);
+    }
+
+    private static void FillLocalFoldersAndFiles(string localPath, FolderCollection folders, FileCollection files)
+    {
+        var Directories = Directory.GetDirectories(localPath);
+
+        foreach (var Directory in Directories)
+        {
+            string Name = System.IO.Path.GetFileName(Directory);
+            FolderCollection Folders = GetSubfolderList(Directory);
+            FileCollection Files = GetFileList(Directory);
+
+            Folder NewFolder = new(null, Name, Folders, Files);
+
+            folders.Add(NewFolder);
+        }
+
+        var FileNames = Directory.GetFiles(localPath);
+
+        foreach (var FileName in FileNames)
+        {
+            string Name = System.IO.Path.GetFileName(FileName);
+            File NewFile = new(null, Name);
+
+            files.Add(NewFile);
+        }
     }
 
     private static FolderCollection GetSubfolderList(string localPath)
@@ -88,33 +80,6 @@ internal record RootFolder : Folder
 
             Folder NewFolder = new(null, Name, Folders, Files);
             Result.Add(NewFolder);
-        }
-
-        return Result;
-    }
-
-    private static async Task<FolderCollection> GetSubfolderListAsync(GitHubClient client, GitHubLocation remoteLocation, IReadOnlyList<RepositoryContent> remoteContent)
-    {
-        FolderCollection Result = new();
-
-        foreach (var RepositoryContent in remoteContent)
-        {
-            bool ParseSuccess = RepositoryContent.Type.TryParse(out ContentType Type);
-            Debug.Assert(ParseSuccess);
-
-            if (Type == ContentType.Dir)
-            {
-                string Name = RepositoryContent.Name;
-
-                var Contents = await client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, RepositoryContent.Path);
-                IReadOnlyList<RepositoryContent> SubContent = Contents;
-
-                FolderCollection Folders = await GetSubfolderListAsync(client, remoteLocation, SubContent);
-                FileCollection Files = GetFileList(client, remoteLocation, SubContent);
-
-                Folder NewFolder = new(null, Name, Folders, Files);
-                Result.Add(NewFolder);
-            }
         }
 
         return Result;
@@ -137,7 +102,48 @@ internal record RootFolder : Folder
         return Result;
     }
 
-    private static FileCollection GetFileList(GitHubClient client, GitHubLocation remoteLocation, IReadOnlyList<RepositoryContent> remoteContent)
+    private static async Task<(FolderCollection Folders, FileCollection Files)> ParseRemoteAsync(GitHubLocation remoteLocation)
+    {
+        string? AppName = typeof(RootFolder).Assembly.GetName().Name;
+        Debug.Assert(AppName is not null);
+
+        GitHubClient Client = new GitHubClient(new ProductHeaderValue(AppName));
+        var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, remoteLocation.RemoteRoot);
+
+        FolderCollection ResultFolders = await GetSubfolderListAsync(Client, remoteLocation, Contents);
+        FileCollection ResultFiles = GetFileList(Contents);
+
+        return (ResultFolders, ResultFiles);
+    }
+
+    private static async Task<FolderCollection> GetSubfolderListAsync(GitHubClient client, GitHubLocation remoteLocation, IReadOnlyList<RepositoryContent> remoteContent)
+    {
+        FolderCollection Result = new();
+
+        foreach (var RepositoryContent in remoteContent)
+        {
+            bool ParseSuccess = RepositoryContent.Type.TryParse(out ContentType Type);
+            Debug.Assert(ParseSuccess);
+
+            if (Type == ContentType.Dir)
+            {
+                string Name = RepositoryContent.Name;
+
+                var Contents = await client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, RepositoryContent.Path);
+                IReadOnlyList<RepositoryContent> SubContent = Contents;
+
+                FolderCollection Folders = await GetSubfolderListAsync(client, remoteLocation, SubContent);
+                FileCollection Files = GetFileList(SubContent);
+
+                Folder NewFolder = new(null, Name, Folders, Files);
+                Result.Add(NewFolder);
+            }
+        }
+
+        return Result;
+    }
+
+    private static FileCollection GetFileList(IReadOnlyList<RepositoryContent> remoteContent)
     {
         FileCollection Result = new();
 

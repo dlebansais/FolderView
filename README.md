@@ -30,7 +30,7 @@ Simple immutable view of a folder structure on disk or on the Internet.
 ### RootFolderFrom
 Gets a root folder from a local path or remote address.
 
-`public static IFolder RootFolderFrom(ILocation location)`
+`public static async Task<IFolder> RootFolderFromAsync(ILocation location)`
 
 ### Combine
 Combines a parent folder, or path, and a name to return the path to that name. In the case of a folder, a `null` parent indicates the root folder.
