@@ -30,27 +30,32 @@ dotnet_diagnostic.SA1615.severity = suggestion
 # SA1633: File should have header
 dotnet_diagnostic.SA1633.severity = suggestion
 
-# Name convention
-
-## Local symbol group
+# Local symbol group naming convention
 dotnet_naming_symbols.local_symbol_group.applicable_kinds = local
-
-## Local naming style
+## Naming style
 dotnet_naming_style.local_naming_style.capitalization = first_word_upper
-
-## set group, style and violation severity
+## Set group, style and violation severity
 dotnet_naming_rule.locals_are_first_word_upper.symbols = local_symbol_group
 dotnet_naming_rule.locals_are_first_word_upper.style = local_naming_style
 dotnet_naming_rule.locals_are_first_word_upper.severity = warning
 
-## Field symbol group
+# Field symbol group naming convention
 dotnet_naming_symbols.field_symbol_group.applicable_kinds = field
-
-## Field naming style
+## Naming style
 dotnet_naming_style.field_naming_style.capitalization = first_word_upper
 dotnet_naming_style.field_naming_style.required_prefix = _
-
-## set group, style and violation severity
+## Set group, style and violation severity
 dotnet_naming_rule.fields_are_first_word_upper.symbols = field_symbol_group
 dotnet_naming_rule.fields_are_first_word_upper.style = field_naming_style
+dotnet_naming_rule.fields_are_first_word_upper.severity = warning
+
+# Public Const Field symbol group naming convention
+dotnet_naming_symbols.public_const_field_symbol_group.applicable_kinds = field
+dotnet_naming_symbols.public_const_field_symbol_group.applicable_accessibilities = public
+dotnet_naming_symbols.public_const_field_symbol_group.required_modifiers = const
+## Naming style
+dotnet_naming_style.public_const_field_naming_style.capitalization = first_word_upper
+## Set group, style and violation severity
+dotnet_naming_rule.fields_are_first_word_upper.symbols = public_const_field_symbol_group
+dotnet_naming_rule.fields_are_first_word_upper.style = public_const_field_naming_style
 dotnet_naming_rule.fields_are_first_word_upper.severity = warning
