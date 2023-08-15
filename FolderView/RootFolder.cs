@@ -9,6 +9,7 @@ using Octokit;
 /// <summary>
 /// Provides a view of the root folder in a folder structure.
 /// </summary>
+[DebuggerDisplay("(root)")]
 internal record RootFolder : Folder
 {
     /// <summary>

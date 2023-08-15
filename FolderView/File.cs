@@ -10,10 +10,11 @@ using Octokit;
 /// Represents a file.
 /// </summary>
 /// <inheritdoc/>
+[DebuggerDisplay("{Name,nq} (path: {((Path)Path).Combined,nq})")]
 internal record File(IFolder? Parent, string Name) : IFile
 {
     /// <inheritdoc/>
-    public IPath Path { get; } = FolderView.Path.Combine(Parent, Name);
+    public IPath Path => FolderView.Path.Combine(Parent, Name);
 
     /// <inheritdoc/>
     public byte[]? Content { get; private set; }
@@ -22,7 +23,7 @@ internal record File(IFolder? Parent, string Name) : IFile
     public async Task LoadAsync()
     {
         IFolder? RootParent = Parent;
-        while (RootParent is not null && RootParent is not FolderView.RootFolder)
+        while (RootParent is not null && RootParent is not RootFolder)
             RootParent = RootParent.Parent;
 
         Debug.Assert(RootParent is RootFolder);

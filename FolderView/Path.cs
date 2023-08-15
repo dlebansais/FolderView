@@ -1,6 +1,7 @@
 ﻿namespace FolderView;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Contracts;
 using NotFoundException = System.IO.FileNotFoundException;
@@ -9,12 +10,34 @@ using NotFoundException = System.IO.FileNotFoundException;
 /// Represents the path from the root to a folder or file.
 /// </summary>
 /// <inheritdoc/>
+[DebuggerDisplay("{Combined,nq}")]
 public record Path(IList<string> Ancestors, string Name) : IPath
 {
     /// <summary>
     /// Defines the ancestor string in path.
     /// </summary>
     public const string Ancestor = "..";
+
+    /// <summary>
+    /// Gets a combined string from <see cref="Ancestors"/>.
+    /// </summary>
+    internal string Combined
+    {
+        get
+        {
+            if (Ancestors is null)
+                return string.Empty;
+
+            string Result = string.Empty;
+
+            foreach (string Ancestor in Ancestors)
+                Result += $"/{Ancestor}";
+
+            Result += $"/{Name}";
+
+            return Result;
+        }
+    }
 
     /// <summary>
     /// Gets a root folder from a local path or remote address.

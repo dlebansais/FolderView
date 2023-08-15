@@ -19,12 +19,7 @@ public record GitHubLocation(string UserName, string RepositoryName, string Remo
     /// <param name="path">The relative path.</param>
     public string GetAbsolutePath(IPath path)
     {
-        string Result = RemoteRoot;
-
-        foreach (string Name in path.Ancestors)
-            Result += $"/{Name}";
-
-        Result += $"/{path.Name}";
+        string Result = RemoteRoot + ((Path)path).Combined;
 
         return Result;
     }
