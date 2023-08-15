@@ -1,6 +1,7 @@
 ﻿namespace FolderView;
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Contracts;
 using NotFoundException = System.IO.FileNotFoundException;
 
@@ -19,12 +20,12 @@ public record Path(IList<string> Ancestors, string Name) : IPath
     /// Gets a root folder from a local path or remote address.
     /// </summary>
     /// <param name="location">The location of the root.</param>
-    public static IFolder RootFolderFrom(ILocation location)
+    public static async Task<IFolder> RootFolderFromAsync(ILocation location)
     {
         location.MustBeNotNull();
         location.MustBeValid();
 
-        (IFolderCollection Folders, IFileCollection Files) = RootFolder.TryParseAsync(location);
+        (IFolderCollection Folders, IFileCollection Files) = await RootFolder.TryParseAsync(location);
         RootFolder Result = new RootFolder(Folders, Files);
 
         Result.EnsureNotNull();

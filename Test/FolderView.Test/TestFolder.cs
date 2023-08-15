@@ -9,10 +9,7 @@ public class TestFolder
     [Test]
     public void TestWithLocalUri()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();

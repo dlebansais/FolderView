@@ -10,11 +10,9 @@ public class TestPath
     [Test]
     public void TestCombineFolder()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
         IPath CombineResult;
 
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         IFolder? NullFolder = null;
         CombineResult = Path.Combine(NullFolder, RootFolderStructure.RootFolders[0]);
@@ -56,10 +54,7 @@ public class TestPath
     [Test]
     public void TestFirstLevelFolder()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
 
@@ -71,10 +66,7 @@ public class TestPath
     [Test]
     public void TestFirstLevelFile()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
 
@@ -86,10 +78,7 @@ public class TestPath
     [Test]
     public void TestSecondLevelFolder()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
 
@@ -101,10 +90,7 @@ public class TestPath
     [Test]
     public void TestSecondLevelFile()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path SecondLevelFilePath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Files[0]);
 
@@ -116,10 +102,7 @@ public class TestPath
     [Test]
     public void TestAncestorLevelFolder()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
         IFolder SecondLevelFolder = Path.GetRelativeFolder(RootFolder, SecondLevelFolderPath);
@@ -132,10 +115,7 @@ public class TestPath
     [Test]
     public void TestAncestorLevelFile()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
         IFolder SecondLevelFolder = Path.GetRelativeFolder(RootFolder, SecondLevelFolderPath);
@@ -149,16 +129,14 @@ public class TestPath
     [Test]
     public void TestNull()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
         Exception Exception;
 
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
 
-        Exception = Assert.Throws<NullReferenceException>(() => Path.RootFolderFrom(null!));
+        Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(null!));
         Assert.That(Exception.Message, Is.EqualTo("location"));
 
         IFolder? NullFolder = null;
@@ -184,18 +162,19 @@ public class TestPath
     [Test]
     public void TestInvalid()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
         Exception Exception;
         string PropertyName;
 
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+        var RootFolder = TestTools.LoadLocalRoot();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
 
         PropertyName = "Name";
-        var FolderInvalidName = Path.RootFolderFrom(Location);
+        var FolderInvalidNameTask = Path.RootFolderFromAsync(Location);
+        FolderInvalidNameTask.Wait();
+        var FolderInvalidName = FolderInvalidNameTask.Result;
         FolderInvalidName.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidName, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidName, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -205,7 +184,9 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "Folders";
-        var FolderInvalidFolders = Path.RootFolderFrom(Location);
+        var FolderInvalidFoldersTask = Path.RootFolderFromAsync(Location);
+        FolderInvalidFoldersTask.Wait();
+        var FolderInvalidFolders = FolderInvalidFoldersTask.Result;
         FolderInvalidFolders.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidFolders, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidFolders, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -215,7 +196,9 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "Files";
-        var FolderInvalidFiles = Path.RootFolderFrom(Location);
+        var FolderInvalidFilesTask = Path.RootFolderFromAsync(Location);
+        FolderInvalidFilesTask.Wait();
+        var FolderInvalidFiles = FolderInvalidFilesTask.Result;
         FolderInvalidFiles.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidFiles, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidFiles, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -243,11 +226,10 @@ public class TestPath
     [Test]
     public void TestFake()
     {
-        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
         Exception Exception;
 
-        var RootFolder = Path.RootFolderFrom(Location);
-        Assert.That(RootFolder, Is.Not.Null);
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+        var RootFolder = TestTools.LoadLocalRoot();
 
         var FakeFolder = new FakeFolder(null, string.Empty, RootFolder.Folders, RootFolder.Files);
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FakeFolder, string.Empty));
@@ -270,7 +252,9 @@ public class TestPath
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(RootFolder, FileFakePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IPath)));
 
-        var FolderInvalidFolders = Path.RootFolderFrom(Location);
+        var FolderInvalidFoldersTask = Path.RootFolderFromAsync(Location);
+        FolderInvalidFoldersTask.Wait();
+        var FolderInvalidFolders = FolderInvalidFoldersTask.Result;
         FolderInvalidFolders.GetType().GetProperty("Folders")!.SetValue(FolderInvalidFolders, new FakeFolderCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFolders, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
@@ -279,7 +263,9 @@ public class TestPath
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(FolderInvalidFolders, FirstLevelFilePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
 
-        var FolderInvalidFiles = Path.RootFolderFrom(Location);
+        var FolderInvalidFilesTask = Path.RootFolderFromAsync(Location);
+        FolderInvalidFilesTask.Wait();
+        var FolderInvalidFiles = FolderInvalidFilesTask.Result;
         FolderInvalidFiles.GetType().GetProperty("Files")!.SetValue(FolderInvalidFiles, new FakeFileCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFiles, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));

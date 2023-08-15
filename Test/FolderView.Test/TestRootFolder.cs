@@ -10,8 +10,9 @@ public class TestRootFolder
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var TestObject = Path.RootFolderFrom(Location);
-        AssertRootFolderStructure(TestObject);
+        var TestObject = Path.RootFolderFromAsync(Location);
+        TestObject.Wait();
+        AssertRootFolderStructure(TestObject.Result);
     }
 
     [Test]
@@ -19,8 +20,9 @@ public class TestRootFolder
     {
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
 
-        var TestObject = Path.RootFolderFrom(Location);
-        AssertRootFolderStructure(TestObject);
+        var TestObject = Path.RootFolderFromAsync(Location);
+        TestObject.Wait();
+        AssertRootFolderStructure(TestObject.Result);
     }
 
     private void AssertRootFolderStructure(IFolder rootFolder)

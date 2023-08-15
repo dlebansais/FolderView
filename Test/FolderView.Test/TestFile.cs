@@ -10,7 +10,9 @@ public class TestFile
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = Path.RootFolderFrom(Location);
+        var RootFolderTask = Path.RootFolderFromAsync(Location);
+        RootFolderTask.Wait();
+        var RootFolder = RootFolderTask.Result;
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;

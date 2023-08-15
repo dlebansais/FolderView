@@ -47,4 +47,15 @@ public static class TestTools
     {
         return ((IList<IFile>)files).Select(item => item.Name).ToList();
     }
+
+    public static IFolder LoadLocalRoot()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+
+        var RootFolderTask = Path.RootFolderFromAsync(Location);
+        RootFolderTask.Wait();
+        var RootFolder = RootFolderTask.Result;
+
+        return RootFolder;
+    }
 }
