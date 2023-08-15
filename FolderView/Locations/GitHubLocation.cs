@@ -8,4 +8,24 @@
 /// <param name="RemoteRoot">The remote root location as folder names separated by the slash character, or the empty string for the repository root.</param>
 public record GitHubLocation(string UserName, string RepositoryName, string RemoteRoot) : ILocation
 {
+    /// <summary>
+    /// Gets the application name.
+    /// </summary>
+    public static string? AppName => typeof(GitHubLocation).Assembly.GetName().Name;
+
+    /// <summary>
+    /// Gets the absolute path to the provided relative path starting from this location.
+    /// </summary>
+    /// <param name="path">The relative path.</param>
+    public string GetAbsolutePath(IPath path)
+    {
+        string Result = RemoteRoot;
+
+        foreach (string Name in path.Ancestors)
+            Result += $"/{Name}";
+
+        Result += $"/{path.Name}";
+
+        return Result;
+    }
 }

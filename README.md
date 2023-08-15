@@ -48,6 +48,6 @@ Gets the folder starting from a parent and following a path.
 
 `public static IFile GetRelativeFile(IFolder parent, IPath path)`
 
+# Loading content
 
-
-
+The `IFile` interface provides a `LoadAsync()` method that fills the `Content` property.

@@ -14,14 +14,21 @@ internal record RootFolder : Folder
     /// <summary>
     /// Initializes a new instance of the <see cref="RootFolder"/> class.
     /// </summary>
+    /// <param name="location">The root folder location.</param>
     /// <param name="folders">The subfolders.</param>
     /// <param name="files">The files in the root folder.</param>
-    public RootFolder(IFolderCollection folders, IFileCollection files)
+    public RootFolder(ILocation location, IFolderCollection folders, IFileCollection files)
         : base(null, string.Empty, folders, files)
     {
+        Location = location;
         Folders = ((FolderCollection)Folders).WithParent(this);
         Files = ((FileCollection)Files).WithParent(this);
     }
+
+    /// <summary>
+    /// Gets the root folder location.
+    /// </summary>
+    public ILocation Location { get; }
 
     /// <summary>
     /// Enumerates folders and files at the provided location.
@@ -104,10 +111,7 @@ internal record RootFolder : Folder
 
     private static async Task<(FolderCollection Folders, FileCollection Files)> ParseRemoteAsync(GitHubLocation remoteLocation)
     {
-        string? AppName = typeof(RootFolder).Assembly.GetName().Name;
-        Debug.Assert(AppName is not null);
-
-        GitHubClient Client = new GitHubClient(new ProductHeaderValue(AppName));
+        GitHubClient Client = new GitHubClient(new ProductHeaderValue(GitHubLocation.AppName));
         var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, remoteLocation.RemoteRoot);
 
         FolderCollection ResultFolders = await GetSubfolderListAsync(Client, remoteLocation, Contents);

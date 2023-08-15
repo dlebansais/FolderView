@@ -1,12 +1,13 @@
 ﻿namespace FolderView.Test;
 
+using System.Text;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestFile
 {
     [Test]
-    public void TestWithLocalUri()
+    public void TestWithLocal()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
@@ -37,5 +38,75 @@ public class TestFile
     private void TestRootNoMoreFile(IFileCollection rootFiles, int index)
     {
         Assert.That(rootFiles, Has.Count.EqualTo(index));
+    }
+
+    [Test]
+    public void TestLoadLocal()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+        TestLoadRootFile(Location);
+    }
+
+    [Test]
+    public void TestLoadRemote()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
+        TestLoadRootFile(Location);
+    }
+
+    private void TestLoadRootFile(ILocation location)
+    {
+        var RootFolderTask = Path.RootFolderFromAsync(location);
+        RootFolderTask.Wait();
+        var RootFolder = RootFolderTask.Result;
+        Assert.That(RootFolder, Is.Not.Null);
+
+        Assert.That(RootFolder.Files, Has.Count.GreaterThan(0));
+        var FirstFile = RootFolder.Files[0];
+
+        var LoadTask = FirstFile.LoadAsync();
+        LoadTask.Wait();
+
+        var Content = FirstFile.Content;
+        Assert.That(Content, Is.Not.Null);
+
+        string ContentAsString = Encoding.UTF8.GetString(Content);
+        Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
+    }
+
+    [Test]
+    public void TestLoadLocalSubfolder()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
+        TestLoadSubfolderFile(Location);
+    }
+
+    [Test]
+    public void TestLoadRemoteSubfolder()
+    {
+        ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
+        TestLoadSubfolderFile(Location);
+    }
+
+    private void TestLoadSubfolderFile(ILocation location)
+    {
+        var RootFolderTask = Path.RootFolderFromAsync(location);
+        RootFolderTask.Wait();
+        var RootFolder = RootFolderTask.Result;
+        Assert.That(RootFolder, Is.Not.Null);
+
+        Assert.That(RootFolder.Folders, Has.Count.GreaterThan(0));
+        var FirstFolder = RootFolder.Folders[0];
+        Assert.That(FirstFolder.Files, Has.Count.GreaterThan(0));
+        var FirstFile = FirstFolder.Files[0];
+
+        var LoadTask = FirstFile.LoadAsync();
+        LoadTask.Wait();
+
+        var Content = FirstFile.Content;
+        Assert.That(Content, Is.Not.Null);
+
+        string ContentAsString = Encoding.UTF8.GetString(Content);
+        Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
     }
 }
