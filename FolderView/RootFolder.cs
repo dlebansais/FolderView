@@ -13,61 +13,65 @@ internal record RootFolder : Folder
     /// <summary>
     /// Initializes a new instance of the <see cref="RootFolder"/> class.
     /// </summary>
-    /// <param name="location">The path or address to the root.</param>
-    public RootFolder(ILocation location)
-        : base(null, string.Empty, GetSubfolderList(location), GetFileList(location))
+    /// <param name="folders">The subfolders.</param>
+    /// <param name="files">The files in the root folder.</param>
+    public RootFolder(IFolderCollection folders, IFileCollection files)
+        : base(null, string.Empty, folders, files)
     {
         Folders = ((FolderCollection)Folders).WithParent(this);
         Files = ((FileCollection)Files).WithParent(this);
     }
 
-    private static bool TryParseAsLocal(ILocation location, out string localRoot)
+    /// <summary>
+    /// Enumerates folders and files at the provided location.
+    /// </summary>
+    /// <param name="location">The location.</param>
+    internal static (IFolderCollection Folders, IFileCollection Files) TryParseAsync(ILocation location)
     {
+        FolderCollection ResultFolders = new();
+        FileCollection ResultFiles = new();
+
         if (location is LocalLocation AsLocal)
         {
-            localRoot = AsLocal.LocalRoot;
-            return true;
+            string LocalPath = AsLocal.LocalRoot;
+
+            var Directories = Directory.GetDirectories(LocalPath);
+
+            foreach (var Directory in Directories)
+            {
+                string Name = System.IO.Path.GetFileName(Directory);
+                FolderCollection Folders = GetSubfolderList(Directory);
+                FileCollection Files = GetFileList(Directory);
+
+                Folder NewFolder = new(null, Name, Folders, Files);
+                ResultFolders.Add(NewFolder);
+            }
+
+            var FileNames = Directory.GetFiles(LocalPath);
+
+            foreach (var FileName in FileNames)
+            {
+                string Name = System.IO.Path.GetFileName(FileName);
+                File NewFile = new(null, Name);
+
+                ResultFiles.Add(NewFile);
+            }
         }
 
-        localRoot = null!;
-        return false;
-    }
-
-    private static bool TryParseAsRemote(ILocation location, out GitHubClient client, out GitHubLocation remoteLocation, out IReadOnlyList<RepositoryContent> remoteRoot)
-    {
         if (location is GitHubLocation AsRemoteLocation)
         {
             string? AppName = typeof(RootFolder).Assembly.GetName().Name;
             Debug.Assert(AppName is not null);
 
-            client = new GitHubClient(new ProductHeaderValue(AppName));
-            var Contents = client.Repository.Content.GetAllContents(AsRemoteLocation.UserName, AsRemoteLocation.RepositoryName, AsRemoteLocation.RemoteRoot);
+            GitHubClient Client = new GitHubClient(new ProductHeaderValue(AppName));
+            var Contents = Client.Repository.Content.GetAllContents(AsRemoteLocation.UserName, AsRemoteLocation.RepositoryName, AsRemoteLocation.RemoteRoot);
             Contents.Wait();
 
-            remoteLocation = AsRemoteLocation;
-            remoteRoot = Contents.Result;
-            return true;
+            ResultFolders = GetSubfolderList(Client, AsRemoteLocation, Contents.Result);
+            ResultFiles = GetFileList(Client, AsRemoteLocation, Contents.Result);
         }
 
-        client = null!;
-        remoteLocation = null!;
-        remoteRoot = null!;
-        return false;
-    }
-
-    private static FolderCollection GetSubfolderList(ILocation location)
-    {
-        FolderCollection? Result = null;
-
-        if (TryParseAsLocal(location, out string LocalRoot))
-            Result = GetSubfolderList(LocalRoot);
-
-        if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
-            Result = GetSubfolderList(Client, RemoteLocation, RemoteRoot);
-
-        Debug.Assert(Result is not null);
-
-        return Result;
+        return (ResultFolders, ResultFiles);
     }
 
     private static FolderCollection GetSubfolderList(string localPath)
@@ -113,21 +117,6 @@ internal record RootFolder : Folder
                 Result.Add(NewFolder);
             }
         }
-
-        return Result;
-    }
-
-    private static FileCollection GetFileList(ILocation location)
-    {
-        FileCollection? Result = null;
-
-        if (TryParseAsLocal(location, out string LocalRoot))
-            Result = GetFileList(LocalRoot);
-
-        if (TryParseAsRemote(location, out GitHubClient Client, out GitHubLocation RemoteLocation, out IReadOnlyList<RepositoryContent> RemoteRoot))
-            Result = GetFileList(Client, RemoteLocation, RemoteRoot);
-
-        Debug.Assert(Result is not null);
 
         return Result;
     }

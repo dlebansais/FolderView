@@ -24,7 +24,8 @@ public record Path(IList<string> Ancestors, string Name) : IPath
         location.MustBeNotNull();
         location.MustBeValid();
 
-        IFolder Result = new RootFolder(location);
+        (IFolderCollection Folders, IFileCollection Files) = RootFolder.TryParseAsync(location);
+        RootFolder Result = new RootFolder(Folders, Files);
 
         Result.EnsureNotNull();
         return Result;
