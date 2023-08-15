@@ -1,9 +1,12 @@
 ﻿namespace FolderView;
 
+using System.Diagnostics;
+
 /// <summary>
 /// Represents a location available locally.
 /// </summary>
 /// <param name="LocalRoot">The local root location.</param>
+[DebuggerDisplay("{LocalRoot,nq}")]
 public record LocalLocation(string LocalRoot) : ILocation
 {
     /// <summary>
