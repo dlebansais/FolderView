@@ -50,4 +50,8 @@ Gets the folder starting from a parent and following a path.
 
 # Loading content
 
-The `IFile` interface provides a `LoadAsync()` method that fills the `Content` property.
+The implementation of the `IFile` interface provides a `public async Task LoadAsync()` method that fills the `public byte[]? Content { get; }` property.
+
+Notes:
++ If a file content is modified, calling `LoadAsync` updates `Content` with the new content.
++ If a file is deleted, calling `LoadAsync` throws an exception and `Content` is left unchanged.
