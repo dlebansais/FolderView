@@ -18,11 +18,13 @@ public class TestRootFolder
     [Test]
     public void CreateWithRemoteUri()
     {
+#if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
 
         var TestObject = Path.RootFolderFromAsync(Location);
         TestObject.Wait();
         AssertRootFolderStructure(TestObject.Result);
+#endif
     }
 
     private void AssertRootFolderStructure(IFolder rootFolder)

@@ -50,8 +50,10 @@ public class TestFile
     [Test]
     public void TestLoadRemote()
     {
+#if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
         TestLoadRootFile(Location);
+#endif
     }
 
     private void TestLoadRootFile(ILocation location)
@@ -84,8 +86,10 @@ public class TestFile
     [Test]
     public void TestLoadRemoteSubfolder()
     {
+#if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
         TestLoadSubfolderFile(Location);
+#endif
     }
 
     private void TestLoadSubfolderFile(ILocation location)

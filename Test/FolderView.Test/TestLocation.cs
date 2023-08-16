@@ -28,6 +28,7 @@ public class TestLocation
         Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidLocalRoot));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
+#if ENABLE_REMOTE
         PropertyName = "UserName";
         var LocationInvalidUserName = RootFolderStructure.GetRootAsRemoteLocation();
         LocationInvalidUserName.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidUserName, null!);
@@ -45,5 +46,6 @@ public class TestLocation
         LocationInvalidRemoteRoot.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidRemoteRoot, null!);
         Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidRemoteRoot));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
+#endif
     }
 }
