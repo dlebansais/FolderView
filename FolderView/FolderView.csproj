@@ -1,23 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>net7.0-windows7.0</TargetFrameworks>
-	  <LangVersion>11.0</LangVersion>
-	  <Nullable>enable</Nullable>
-	  <Platforms>x64</Platforms>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Version>1.0.0</Version>
-	  <Authors>David Le Bansais</Authors>
-	  <Company />
-	  <Product />
-	  <Description>Simple immutable view of a folder structure on disk or on the Internet</Description>
-	  <Copyright>Copyright © 2023 David Le Bansais</Copyright>
-	  <AssemblyVersion>1.0.0.2</AssemblyVersion>
-	  <FileVersion>1.0.0.2</FileVersion>
-	  <RepositoryUrl>https://github.com/dlebansais/FolderView</RepositoryUrl>
-	  <NeutralLanguage>en-US</NeutralLanguage>
-	  <RootNamespace>FolderView</RootNamespace>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFrameworks>net7.0-windows7.0</TargetFrameworks>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0</Version>
+    <Authors>David Le Bansais</Authors>
+    <Company />
+    <Product />
+    <Description>Simple immutable view of a folder structure on disk or on the Internet</Description>
+    <Copyright>Copyright © 2023 David Le Bansais</Copyright>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.2</FileVersion>
+    <RepositoryUrl>https://github.com/dlebansais/FolderView</RepositoryUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RootNamespace>FolderView</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,11 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Octokit" Version="7.1.0" />
-    <PackageReference Include="PolySharp" Version="1.13.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +37,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="PolySharp" Version="1.13.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Octokit" Version="7.1.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
