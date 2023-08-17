@@ -125,6 +125,34 @@ public class TestPath
         Assert.That(GetResult, Is.EqualTo(RootFolder.Files[0]));
     }
 
+    [Test]
+    public void TestTo()
+    {
+        Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
+        Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
+
+        IPath FirstToSecondPath = FirstLevelFolderPath.To(RootFolderStructure.Folder_0_0_Folders[0]);
+        Assert.That(FirstToSecondPath, Is.EqualTo(SecondLevelFolderPath));
+        Assert.That(FirstToSecondPath.GetHashCode(), Is.EqualTo(SecondLevelFolderPath.GetHashCode()));
+
+        IPath SamePath = FirstToSecondPath.Up();
+        Assert.That(FirstLevelFolderPath, Is.EqualTo(SamePath));
+    }
+
+    [Test]
+    public void TestUp()
+    {
+        Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
+        Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
+
+        IPath SecondToFirstPath = SecondLevelFolderPath.Up();
+        Assert.That(SecondToFirstPath, Is.EqualTo(FirstLevelFolderPath));
+        Assert.That(SecondToFirstPath.GetHashCode(), Is.EqualTo(FirstLevelFolderPath.GetHashCode()));
+
+        IPath SamePath = SecondToFirstPath.To(RootFolderStructure.Folder_0_0_Folders[0]);
+        Assert.That(SecondLevelFolderPath, Is.EqualTo(SamePath));
+    }
+
     [DebugOnly]
     [Test]
     public void TestNull()
@@ -237,6 +265,10 @@ public class TestPath
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
+
+        FakePath TestFakePath = new(new List<string>(), string.Empty);
+        Assert.Throws<NotImplementedException>(() => TestFakePath.To(string.Empty));
+        Assert.Throws<NotImplementedException>(() => TestFakePath.Up());
 
         var FolderFakePath = new FakePath(new List<string>(), RootFolderStructure.RootFolders[0]);
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFolder(FakeFolder, FirstLevelFolderPath));

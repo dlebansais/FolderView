@@ -1,7 +1,9 @@
 ﻿namespace FolderView;
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts;
 using NotFoundException = System.IO.FileNotFoundException;
@@ -11,7 +13,7 @@ using NotFoundException = System.IO.FileNotFoundException;
 /// </summary>
 /// <inheritdoc/>
 [DebuggerDisplay("{Combined,nq}")]
-public record Path(IList<string> Ancestors, string Name) : IPath
+public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Path>
 {
     /// <summary>
     /// Defines the ancestor string in path.
@@ -37,6 +39,44 @@ public record Path(IList<string> Ancestors, string Name) : IPath
 
             return Result;
         }
+    }
+
+    /// <inheritdoc/>
+    public virtual bool Equals(Path? other)
+    {
+        return other is not null &&
+               Ancestors.SequenceEqual(other.Ancestors) &&
+               Name == other.Name;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        int Result = Name.GetHashCode();
+
+        foreach (string Ancestor in Ancestors)
+            Result ^= Ancestor.GetHashCode();
+
+        return Result;
+    }
+
+    /// <inheritdoc/>
+    public IPath To(string name) => Combine(this, name);
+
+    /// <inheritdoc/>
+    public IPath Up()
+    {
+        if (Ancestors.Count == 0)
+            throw new InvalidOperationException();
+
+        List<string> ParentNameList = new(Ancestors);
+        int LastAncestorIndex = ParentNameList.Count - 1;
+        string LastAncestor = ParentNameList[LastAncestorIndex];
+
+        ParentNameList.RemoveAt(LastAncestorIndex);
+        IPath Result = new Path(ParentNameList, LastAncestor);
+
+        return Result;
     }
 
     /// <summary>

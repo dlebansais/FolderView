@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product />
     <Description>Simple immutable view of a folder structure on disk or on the Internet</Description>
     <Copyright>Copyright © 2023 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.1.3</AssemblyVersion>
-    <FileVersion>1.0.1.3</FileVersion>
+    <AssemblyVersion>1.0.2.4</AssemblyVersion>
+    <FileVersion>1.0.2.4</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/FolderView</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>FolderView</RootNamespace>
@@ -26,6 +26,14 @@
 
   <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows7.0|x64'">
+    <DefineConstants>$(DefineConstants);ENABLE_REMOTE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows7.0|x64'">
+    <DefineConstants>$(DefineConstants);ENABLE_REMOTE</DefineConstants>
   </PropertyGroup>
 	
   <ItemGroup>
@@ -45,7 +53,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Octokit" Version="7.1.0" />
   </ItemGroup>
 
