@@ -27,14 +27,6 @@
   <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows7.0|x64'">
-    <DefineConstants>$(DefineConstants);ENABLE_REMOTE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows7.0|x64'">
-    <DefineConstants>$(DefineConstants);ENABLE_REMOTE</DefineConstants>
-  </PropertyGroup>
 	
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
