@@ -1,29 +1,28 @@
 ﻿namespace FolderView.Test;
 
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestRootFolder
 {
     [Test]
-    public void CreateWithLocalUri()
+    public async Task CreateWithLocalUriAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var TestObject = Path.RootFolderFromAsync(Location);
-        TestObject.Wait();
-        AssertRootFolderStructure(TestObject.Result);
+        using var TestObject = await Path.RootFolderFromAsync(Location);
+        AssertRootFolderStructure(TestObject);
     }
 
     [Test]
-    public void CreateWithRemoteUri()
+    public async Task CreateWithRemoteUriAsync()
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
 
-        var TestObject = Path.RootFolderFromAsync(Location);
-        TestObject.Wait();
-        AssertRootFolderStructure(TestObject.Result);
+        using var TestObject = await Path.RootFolderFromAsync(Location);
+        AssertRootFolderStructure(TestObject);
 #endif
     }
 

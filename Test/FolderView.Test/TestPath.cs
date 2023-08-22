@@ -201,9 +201,7 @@ public class TestPath
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
 
         PropertyName = "Name";
-        var FolderInvalidNameTask = Path.RootFolderFromAsync(Location);
-        FolderInvalidNameTask.Wait();
-        var FolderInvalidName = FolderInvalidNameTask.Result;
+        var FolderInvalidName = await Path.RootFolderFromAsync(Location);
         FolderInvalidName.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidName, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidName, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -213,9 +211,7 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "Folders";
-        var FolderInvalidFoldersTask = Path.RootFolderFromAsync(Location);
-        FolderInvalidFoldersTask.Wait();
-        var FolderInvalidFolders = FolderInvalidFoldersTask.Result;
+        var FolderInvalidFolders = await Path.RootFolderFromAsync(Location);
         FolderInvalidFolders.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidFolders, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidFolders, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -225,9 +221,7 @@ public class TestPath
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "Files";
-        var FolderInvalidFilesTask = Path.RootFolderFromAsync(Location);
-        FolderInvalidFilesTask.Wait();
-        var FolderInvalidFiles = FolderInvalidFilesTask.Result;
+        var FolderInvalidFiles = await Path.RootFolderFromAsync(Location);
         FolderInvalidFiles.GetType().GetProperty(PropertyName)!.SetValue(FolderInvalidFiles, null!);
         Exception = Assert.Throws<NullReferenceException>(() => Path.Combine(FolderInvalidFiles, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
@@ -285,9 +279,7 @@ public class TestPath
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(RootFolder, FileFakePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IPath)));
 
-        var FolderInvalidFoldersTask = Path.RootFolderFromAsync(Location);
-        FolderInvalidFoldersTask.Wait();
-        var FolderInvalidFolders = FolderInvalidFoldersTask.Result;
+        var FolderInvalidFolders = await Path.RootFolderFromAsync(Location);
         FolderInvalidFolders.GetType().GetProperty("Folders")!.SetValue(FolderInvalidFolders, new FakeFolderCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFolders, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
@@ -296,9 +288,7 @@ public class TestPath
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(FolderInvalidFolders, FirstLevelFilePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IFolderCollection)));
 
-        var FolderInvalidFilesTask = Path.RootFolderFromAsync(Location);
-        FolderInvalidFilesTask.Wait();
-        var FolderInvalidFiles = FolderInvalidFilesTask.Result;
+        var FolderInvalidFiles = await Path.RootFolderFromAsync(Location);
         FolderInvalidFiles.GetType().GetProperty("Files")!.SetValue(FolderInvalidFiles, new FakeFileCollection());
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FolderInvalidFiles, string.Empty));
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));

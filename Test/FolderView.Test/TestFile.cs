@@ -11,7 +11,7 @@ public class TestFile
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = await Path.RootFolderFromAsync(Location);
+        using var RootFolder = await Path.RootFolderFromAsync(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;
@@ -56,7 +56,7 @@ public class TestFile
 
     private async Task TestLoadRootFileAsync(ILocation location)
     {
-        var RootFolder = await Path.RootFolderFromAsync(location);
+        using var RootFolder = await Path.RootFolderFromAsync(location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Files, Has.Count.GreaterThan(0));
@@ -75,14 +75,14 @@ public class TestFile
     }
 
     [Test]
-    public async Task TestLoadLocalSubfolder()
+    public async Task TestLoadLocalSubfolderAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
         await TestLoadSubfolderFileAsync(Location);
     }
 
     [Test]
-    public async Task TestLoadRemoteSubfolder()
+    public async Task TestLoadRemoteSubfolderAsync()
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
@@ -92,7 +92,7 @@ public class TestFile
 
     private async Task TestLoadSubfolderFileAsync(ILocation location)
     {
-        var RootFolder = await Path.RootFolderFromAsync(location);
+        using var RootFolder = await Path.RootFolderFromAsync(location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Folders, Has.Count.GreaterThan(0));
