@@ -17,7 +17,7 @@ internal record File(IFolder? Parent, string Name) : IFile
     public IPath Path => FolderView.Path.Combine(Parent, Name);
 
     /// <inheritdoc/>
-    public byte[]? Content { get; private set; }
+    public Stream? Content { get; private set; }
 
     /// <inheritdoc/>
     public async Task LoadAsync()
@@ -41,10 +41,7 @@ internal record File(IFolder? Parent, string Name) : IFile
     private void LoadLocal(LocalLocation localLocation)
     {
         string AbsolutePath = localLocation.GetAbsolutePath(Path);
-        using FileStream Stream = new(AbsolutePath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read);
-        using BinaryReader Reader = new(Stream);
-
-        Content = Reader.ReadBytes((int)Stream.Length);
+        Content = new FileStream(AbsolutePath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read);
     }
 
     private async Task LoadRemoteAsync(GitHubLocation remoteLocation)
@@ -58,6 +55,9 @@ internal record File(IFolder? Parent, string Name) : IFile
 
         // If the file has been removed since it was enumerated, the method will leave Content to null.
         foreach (var Item in Contents)
-            Content = Convert.FromBase64String(Item.EncodedContent);
+        {
+            byte[] DecodedContent = Convert.FromBase64String(Item.EncodedContent);
+            Content = new MemoryStream(DecodedContent);
+        }
     }
 }

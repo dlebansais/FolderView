@@ -1,19 +1,17 @@
 ﻿namespace FolderView.Test;
 
-using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestFile
 {
     [Test]
-    public void TestWithLocal()
+    public async Task TestWithLocalAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolderTask = Path.RootFolderFromAsync(Location);
-        RootFolderTask.Wait();
-        var RootFolder = RootFolderTask.Result;
+        var RootFolder = await Path.RootFolderFromAsync(Location);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;
@@ -41,26 +39,24 @@ public class TestFile
     }
 
     [Test]
-    public void TestLoadLocal()
+    public async Task TestLoadLocalAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        TestLoadRootFile(Location);
+        await TestLoadRootFileAsync(Location);
     }
 
     [Test]
-    public void TestLoadRemote()
+    public async Task TestLoadRemoteAsync()
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
-        TestLoadRootFile(Location);
+        await TestLoadRootFileAsync(Location);
 #endif
     }
 
-    private void TestLoadRootFile(ILocation location)
+    private async Task TestLoadRootFileAsync(ILocation location)
     {
-        var RootFolderTask = Path.RootFolderFromAsync(location);
-        RootFolderTask.Wait();
-        var RootFolder = RootFolderTask.Result;
+        var RootFolder = await Path.RootFolderFromAsync(location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Files, Has.Count.GreaterThan(0));
@@ -69,34 +65,34 @@ public class TestFile
         var LoadTask = FirstFile.LoadAsync();
         LoadTask.Wait();
 
-        var Content = FirstFile.Content;
+        using var Content = FirstFile.Content;
         Assert.That(Content, Is.Not.Null);
 
-        string ContentAsString = Encoding.UTF8.GetString(Content);
+        using System.IO.StreamReader Reader = new(Content);
+        string ContentAsString = Reader.ReadToEnd();
+
         Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
     }
 
     [Test]
-    public void TestLoadLocalSubfolder()
+    public async Task TestLoadLocalSubfolder()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        TestLoadSubfolderFile(Location);
+        await TestLoadSubfolderFileAsync(Location);
     }
 
     [Test]
-    public void TestLoadRemoteSubfolder()
+    public async Task TestLoadRemoteSubfolder()
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
-        TestLoadSubfolderFile(Location);
+        await TestLoadSubfolderFileAsync(Location);
 #endif
     }
 
-    private void TestLoadSubfolderFile(ILocation location)
+    private async Task TestLoadSubfolderFileAsync(ILocation location)
     {
-        var RootFolderTask = Path.RootFolderFromAsync(location);
-        RootFolderTask.Wait();
-        var RootFolder = RootFolderTask.Result;
+        var RootFolder = await Path.RootFolderFromAsync(location);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Folders, Has.Count.GreaterThan(0));
@@ -107,10 +103,12 @@ public class TestFile
         var LoadTask = FirstFile.LoadAsync();
         LoadTask.Wait();
 
-        var Content = FirstFile.Content;
+        using var Content = FirstFile.Content;
         Assert.That(Content, Is.Not.Null);
 
-        string ContentAsString = Encoding.UTF8.GetString(Content);
+        using System.IO.StreamReader Reader = new(Content);
+        string ContentAsString = Reader.ReadToEnd();
+
         Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
     }
 }

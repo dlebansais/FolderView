@@ -38,6 +38,8 @@ Combines a parent folder, or path, and a name to return the path to that name. I
 `public static IPath Combine(IFolder? parent, string name)`<br/>
 `public static IPath Combine(IPath parent, string name)`
 
+You can also compose calls to `public IPath To(string name)` and `public IPath Up()` to navigate a hierarchy of paths.
+
 ### GetRelativeFolder
 Gets the folder starting from a parent and following a path.
 
@@ -50,7 +52,7 @@ Gets the folder starting from a parent and following a path.
 
 # Loading content
 
-The implementation of the `IFile` interface provides a `public async Task LoadAsync()` method that fills the `public byte[]? Content { get; }` property.
+The implementation of the `IFile` interface provides a `public async Task LoadAsync()` method that fills the `public Stream? Content { get; }` property.
 
 Notes:
 + If a file content is modified, calling `LoadAsync` updates `Content` with the new content.

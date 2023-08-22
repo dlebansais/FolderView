@@ -1,5 +1,6 @@
 ﻿namespace FolderView;
 
+using System.IO;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -25,7 +26,7 @@ public interface IFile
     /// <summary>
     /// Gets the file content, null if not loaded.
     /// </summary>
-    byte[]? Content { get; }
+    Stream? Content { get; }
 
     /// <summary>
     /// Loads the file content.
