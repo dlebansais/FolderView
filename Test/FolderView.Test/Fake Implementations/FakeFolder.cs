@@ -4,4 +4,8 @@ internal record FakeFolder(IFolder? Parent, string Name, IFolderCollection Folde
 {
     public bool IsRoot { get; } = Parent is null;
     public IPath Path { get; } = FolderView.Path.Combine(Parent, Name);
+
+    public void Dispose()
+    {
+    }
 }

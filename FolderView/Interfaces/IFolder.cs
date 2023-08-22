@@ -1,9 +1,11 @@
 ﻿namespace FolderView;
 
+using System;
+
 /// <summary>
 /// Abstraction of a folder.
 /// </summary>
-public interface IFolder
+public interface IFolder : IDisposable
 {
     /// <summary>
     /// Gets the folder's parent folder, <see langword="null"/> in the root folder.

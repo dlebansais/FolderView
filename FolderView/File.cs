@@ -60,4 +60,16 @@ internal record File(IFolder? Parent, string Name) : IFile
             Content = new MemoryStream(DecodedContent);
         }
     }
+
+    /// <summary>
+    /// Disposes of resources.
+    /// </summary>
+    public void Dispose()
+    {
+        if (Content is not null)
+        {
+            Content.Dispose();
+            Content = null;
+        }
+    }
 }

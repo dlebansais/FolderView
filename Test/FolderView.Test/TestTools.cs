@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 public static class TestTools
 {
@@ -48,13 +49,11 @@ public static class TestTools
         return ((IList<IFile>)files).Select(item => item.Name).ToList();
     }
 
-    public static IFolder LoadLocalRoot()
+    public static async Task<IFolder> LoadLocalRootAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolderTask = Path.RootFolderFromAsync(Location);
-        RootFolderTask.Wait();
-        var RootFolder = RootFolderTask.Result;
+        var RootFolder = await Path.RootFolderFromAsync(Location);
 
         return RootFolder;
     }

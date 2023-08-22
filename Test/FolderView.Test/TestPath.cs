@@ -2,17 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestPath
 {
     [Test]
-    public void TestCombineFolder()
+    public async Task TestCombineFolderAsync()
     {
         IPath CombineResult;
 
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         IFolder? NullFolder = null;
         CombineResult = Path.Combine(NullFolder, RootFolderStructure.RootFolders[0]);
@@ -52,9 +53,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestFirstLevelFolder()
+    public async Task TestFirstLevelFolderAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
 
@@ -64,9 +65,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestFirstLevelFile()
+    public async Task TestFirstLevelFileAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
 
@@ -76,9 +77,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestSecondLevelFolder()
+    public async Task TestSecondLevelFolderAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
 
@@ -88,9 +89,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestSecondLevelFile()
+    public async Task TestSecondLevelFileAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path SecondLevelFilePath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Files[0]);
 
@@ -100,9 +101,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestAncestorLevelFolder()
+    public async Task TestAncestorLevelFolderAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
         IFolder SecondLevelFolder = Path.GetRelativeFolder(RootFolder, SecondLevelFolderPath);
@@ -113,9 +114,9 @@ public class TestPath
     }
 
     [Test]
-    public void TestAncestorLevelFile()
+    public async Task TestAncestorLevelFileAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path SecondLevelFolderPath = new Path(new List<string>() { RootFolderStructure.RootFolders[0] }, RootFolderStructure.Folder_0_0_Folders[0]);
         IFolder SecondLevelFolder = Path.GetRelativeFolder(RootFolder, SecondLevelFolderPath);
@@ -155,11 +156,11 @@ public class TestPath
 
     [DebugOnly]
     [Test]
-    public void TestNull()
+    public async Task TestNullAsync()
     {
         Exception Exception;
 
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
@@ -188,13 +189,13 @@ public class TestPath
 
     [DebugOnly]
     [Test]
-    public void TestInvalid()
+    public async Task TestInvalidAsync()
     {
         Exception Exception;
         string PropertyName;
 
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new Path(new List<string>(), RootFolderStructure.RootFiles[0]);
@@ -252,12 +253,12 @@ public class TestPath
 
     [DebugOnly]
     [Test]
-    public void TestFake()
+    public async Task TestFakeAsync()
     {
         Exception Exception;
 
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         var FakeFolder = new FakeFolder(null, string.Empty, RootFolder.Folders, RootFolder.Files);
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(FakeFolder, string.Empty));

@@ -1,12 +1,13 @@
 ﻿namespace FolderView;
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
 /// <summary>
 /// Abstraction of a file.
 /// </summary>
-public interface IFile
+public interface IFile : IDisposable
 {
     /// <summary>
     /// Gets the file's parent folder, <see langword="null"/> in the root folder.

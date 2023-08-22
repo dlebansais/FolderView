@@ -1,15 +1,16 @@
 ﻿namespace FolderView.Test;
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestFolder
 {
     [Test]
-    public void TestWithLocalUri()
+    public async Task TestWithLocalUriAsync()
     {
-        var RootFolder = TestTools.LoadLocalRoot();
+        using var RootFolder = await TestTools.LoadLocalRootAsync();
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
