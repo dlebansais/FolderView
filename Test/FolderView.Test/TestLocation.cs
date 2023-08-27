@@ -1,18 +1,36 @@
 ﻿namespace FolderView.Test;
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 [TestFixture]
 public class TestLocation
 {
+    [Test]
+    public void TestCanonicalPath()
+    {
+        LocalLocation Location = (LocalLocation)RootFolderStructure.GetRootAsLocalLocation();
+        Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
+
+        string AbsolutePath = Location.GetAbsolutePath(FirstLevelFolderPath);
+        string? AbsolutePathFolder = System.IO.Path.GetDirectoryName(AbsolutePath);
+
+        Assert.That(AbsolutePathFolder, Is.EqualTo(Location.CanonicalRoot));
+    }
+
     [DebugOnly]
     [Test]
     public void TestFake()
     {
         ILocation Location = new FakeLocation();
         Exception Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(Location));
+
         Assert.That(Exception.Message, Does.Contain(nameof(ILocation)));
+
+        Path FirstLevelFolderPath = new Path(new List<string>(), RootFolderStructure.RootFolders[0]);
+
+        Assert.Throws<NotImplementedException>(() => Location.GetAbsolutePath(FirstLevelFolderPath));
     }
 
     [DebugOnly]

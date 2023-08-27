@@ -38,7 +38,8 @@ public static class RootFolderStructure
 
     public static ILocation GetRootAsRemoteLocation()
     {
-        string RemoteRoot = $"Test/{LocalFolderStructureName}";
+        string RemoteRoot = $"Test/../Test/{LocalFolderStructureName}";
+
         GitHubLocation RemoteLocation = new(GitHubProjectUserName, GitHubProjectRepositoryName, RemoteRoot);
 
         return RemoteLocation;
