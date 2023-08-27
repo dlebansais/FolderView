@@ -110,22 +110,32 @@ public class TestPathHelper
 
         Assert.That(CombinedPath, Is.EqualTo($"{Path1}\\{Path2}"));
     }
+
+    private void TestGetFullPath(bool startWithSeparator)
+    {
+        string FullPath;
+        string Header = startWithSeparator ? "/" : string.Empty;
+
+        FullPath = PathHelper.GetFullPath($"{Header}test");
+
+        Assert.That(FullPath, Is.EqualTo($"{Header}test"));
+
+        FullPath = PathHelper.GetFullPath($"{Header}test/test");
+
+        Assert.That(FullPath, Is.EqualTo($"{Header}test/test"));
+
+        FullPath = PathHelper.GetFullPath($"{Header}test/../test");
+
+        Assert.That(FullPath, Is.EqualTo($"{Header}test"));
+    }
+
     [Test]
     public void TestGetFullPath()
     {
+        TestGetFullPath(startWithSeparator: false);
+        TestGetFullPath(startWithSeparator: true);
+
         string FullPath;
-
-        FullPath = PathHelper.GetFullPath("test");
-
-        Assert.That(FullPath, Is.EqualTo($"test"));
-
-        FullPath = PathHelper.GetFullPath("test/test");
-
-        Assert.That(FullPath, Is.EqualTo($"test/test"));
-
-        FullPath = PathHelper.GetFullPath("test/../test");
-
-        Assert.That(FullPath, Is.EqualTo($"test"));
 
         FullPath = PathHelper.GetFullPath("test\\..\\test");
 

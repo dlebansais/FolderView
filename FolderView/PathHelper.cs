@@ -48,9 +48,9 @@ public static class PathHelper
         char PreferredSeparator = SlashSeparatorCount > BackslashSeparatorCount ? SlashSeparator : BackslashSeparator;
 
         string PathWithNormalizedSeparator = path.Replace(SlashSeparator, PreferredSeparator).Replace(BackslashSeparator, PreferredSeparator);
-        bool Path2StartsWithSeparator = PathWithNormalizedSeparator.StartsWith(PreferredSeparator);
+        bool PathStartsWithSeparator = PathWithNormalizedSeparator.StartsWith(PreferredSeparator);
 
-        if (Path2StartsWithSeparator)
+        if (PathStartsWithSeparator)
             PathWithNormalizedSeparator = PathWithNormalizedSeparator.Substring(1);
 
         string[] SplittedPath = PathWithNormalizedSeparator.Split(PreferredSeparator);
@@ -67,7 +67,7 @@ public static class PathHelper
 
         string Result = string.Join(PreferredSeparator, CombinedPaths);
 
-        if (Path2StartsWithSeparator)
+        if (PathStartsWithSeparator)
             Result = PreferredSeparator + Result;
 
         return Result;
