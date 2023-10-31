@@ -43,7 +43,7 @@ internal record RootFolder : Folder
         if (location is LocalLocation AsLocal)
             FillLocalFoldersAndFiles(AsLocal.LocalRoot, ResultFolders, ResultFiles);
         else if (location is GitHubLocation AsRemoteLocation)
-            (ResultFolders, ResultFiles) = await ParseRemoteAsync(AsRemoteLocation);
+            (ResultFolders, ResultFiles) = await ParseRemoteAsync(AsRemoteLocation).ConfigureAwait(false);
 
         return (ResultFolders, ResultFiles);
     }
@@ -112,10 +112,10 @@ internal record RootFolder : Folder
 
     private static async Task<(FolderCollection Folders, FileCollection Files)> ParseRemoteAsync(GitHubLocation remoteLocation)
     {
-        GitHubClient Client = new GitHubClient(new ProductHeaderValue(GitHubLocation.AppName));
-        var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, remoteLocation.RemoteRoot);
+        GitHubClient Client = new(new ProductHeaderValue(GitHubLocation.AppName));
+        var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, remoteLocation.RemoteRoot).ConfigureAwait(false);
 
-        FolderCollection ResultFolders = await GetSubfolderListAsync(Client, remoteLocation, Contents);
+        FolderCollection ResultFolders = await GetSubfolderListAsync(Client, remoteLocation, Contents).ConfigureAwait(false);
         FileCollection ResultFiles = GetFileList(Contents);
 
         return (ResultFolders, ResultFiles);
@@ -134,10 +134,10 @@ internal record RootFolder : Folder
             {
                 string Name = RepositoryContent.Name;
 
-                var Contents = await client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, RepositoryContent.Path);
+                var Contents = await client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, RepositoryContent.Path).ConfigureAwait(false);
                 IReadOnlyList<RepositoryContent> SubContent = Contents;
 
-                FolderCollection Folders = await GetSubfolderListAsync(client, remoteLocation, SubContent);
+                FolderCollection Folders = await GetSubfolderListAsync(client, remoteLocation, SubContent).ConfigureAwait(false);
                 FileCollection Files = GetFileList(SubContent);
 
                 Folder NewFolder = new(null, Name, Folders, Files);

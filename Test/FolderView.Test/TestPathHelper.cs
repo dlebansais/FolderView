@@ -109,10 +109,16 @@ public class TestPathHelper
         CombinedPath = PathHelper.Combine(Path1, Path2);
 
         Assert.That(CombinedPath, Is.EqualTo($"{Path1}\\{Path2}"));
+
+        _ = Assert.Throws<ArgumentNullException>(() => PathHelper.Combine(null!, Path2));
+        _ = Assert.Throws<ArgumentNullException>(() => PathHelper.Combine(Path1, null!));
+        _ = Assert.Throws<ArgumentNullException>(() => PathHelper.Combine(null!, null!));
     }
 
-    private void TestGetFullPath(bool startWithSeparator)
+    private static void TestGetFullPath(bool startWithSeparator)
     {
+        _= Assert.Throws<ArgumentNullException>(() => PathHelper.GetFullPath(null!));
+
         string FullPath;
         string Header = startWithSeparator ? "/" : string.Empty;
 
@@ -157,9 +163,9 @@ public class TestPathHelper
 
         Assert.That(FullPath, Is.EqualTo($"test5\\test6"));
 
-        Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath(".."));
-        Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("test\\..\\.."));
-        Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("\\.."));
-        Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("\\..\\test"));
+        _ = Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath(".."));
+        _ = Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("test\\..\\.."));
+        _ = Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("\\.."));
+        _ = Assert.Throws<ArgumentException>(() => PathHelper.GetFullPath("\\..\\test"));
     }
 }

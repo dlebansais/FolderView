@@ -18,7 +18,7 @@ init:
 
 environment:
   package_token:
-    secure: MvF+AGj2M3nN6iIqDZHxHsDOr6QcqKPhf6xaLwzWpukS+UFiaRDnjum5Rui0AiyF
+    secure: PTQKv7f2BGNT8I1SUx4ErllBziAj7gs+VDcm2h3c8mJ5jtRuGognMEIPm2hPn1NI
   opencover_version: 4.7.1221
   codecov_version: 0.2.4
   csharp-format_version: 0.0.9
@@ -87,7 +87,7 @@ deploy:
     release: $(VERSION_TAG)
     description: 'Automatic deployment'
     auth_token:
-      secure: cDRPl/yROuN4QIJVzPcoIuWbKvPNjgGJJX/8Z+5s4ZKix123RUJieQvJVm6JYBGM
+      secure: PGOJYgFAVX0/IAmEa0Hw+iMT55A5kqaTohVegxgeonUCrIpgFMqP8W2l79Qc8hn+
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Release
     draft: false
     prerelease: false
@@ -98,7 +98,7 @@ deploy:
     release: $(VERSION_TAG)
     description: 'Automatic deployment'
     auth_token:
-      secure: cDRPl/yROuN4QIJVzPcoIuWbKvPNjgGJJX/8Z+5s4ZKix123RUJieQvJVm6JYBGM
+      secure: PGOJYgFAVX0/IAmEa0Hw+iMT55A5kqaTohVegxgeonUCrIpgFMqP8W2l79Qc8hn+
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Debug
     draft: false
     prerelease: false
@@ -119,7 +119,7 @@ deploy:
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Debug
     username: dlebansais
     api_key:
-      secure: GJOgNQLOuHBXfW2wXBaMXudFnnJDNI3od5hh9LFi1brPRK81RiLcbEW9hFbT8rIN
+      secure: mknFmVMr6KwG8AMwKaSrDH30g+usOXvXQMqEKDES4g4X+dBDLDk3g3/x3Al3vcDl
     on:
       branch: deployment
       configuration: Debug
@@ -129,7 +129,7 @@ deploy:
     skip_symbols: true
     username: dlebansais
     api_key:
-      secure: GJOgNQLOuHBXfW2wXBaMXudFnnJDNI3od5hh9LFi1brPRK81RiLcbEW9hFbT8rIN
+      secure: mknFmVMr6KwG8AMwKaSrDH30g+usOXvXQMqEKDES4g4X+dBDLDk3g3/x3Al3vcDl
     on:
       branch: deployment
       configuration: Release

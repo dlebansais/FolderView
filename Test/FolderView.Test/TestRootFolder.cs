@@ -11,7 +11,7 @@ public class TestRootFolder
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        using var TestObject = await Path.RootFolderFromAsync(Location);
+        using var TestObject = await Path.RootFolderFromAsync(Location).ConfigureAwait(false);
         AssertRootFolderStructure(TestObject);
     }
 
@@ -21,12 +21,12 @@ public class TestRootFolder
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
 
-        using var TestObject = await Path.RootFolderFromAsync(Location);
+        using var TestObject = await Path.RootFolderFromAsync(Location).ConfigureAwait(false);
         AssertRootFolderStructure(TestObject);
 #endif
     }
 
-    private void AssertRootFolderStructure(IFolder rootFolder)
+    private static void AssertRootFolderStructure(IFolder rootFolder)
     {
         Assert.That(rootFolder, Is.Not.Null);
 

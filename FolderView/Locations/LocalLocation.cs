@@ -1,5 +1,6 @@
 ﻿namespace FolderView;
 
+using System;
 using System.Diagnostics;
 
 /// <summary>
@@ -12,6 +13,8 @@ public record LocalLocation(string LocalRoot) : ILocation
     /// <inheritdoc/>
     public string GetAbsolutePath(IPath path)
     {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+
         string Result = CanonicalRoot;
 
         foreach (string Name in path.Ancestors)

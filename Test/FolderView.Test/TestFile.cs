@@ -11,7 +11,7 @@ public class TestFile
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        using var RootFolder = await Path.RootFolderFromAsync(Location);
+        using var RootFolder = await Path.RootFolderFromAsync(Location).ConfigureAwait(false);
         Assert.That(RootFolder, Is.Not.Null);
 
         var RootFiles = RootFolder.Files;
@@ -25,7 +25,7 @@ public class TestFile
         TestRootNoMoreFile(RootFiles, 2);
     }
 
-    private void TestRootFile(IFileCollection rootFiles, int index)
+    private static void TestRootFile(IFileCollection rootFiles, int index)
     {
         IFile TestObject = rootFiles[index];
         Assert.That(TestObject, Is.Not.Null);
@@ -33,7 +33,7 @@ public class TestFile
         Assert.That(TestObject.Name, Is.EqualTo(RootFolderStructure.RootFiles[index]));
     }
 
-    private void TestRootNoMoreFile(IFileCollection rootFiles, int index)
+    private static void TestRootNoMoreFile(IFileCollection rootFiles, int index)
     {
         Assert.That(rootFiles, Has.Count.EqualTo(index));
     }
@@ -42,7 +42,7 @@ public class TestFile
     public async Task TestLoadLocalAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        await TestLoadRootFileAsync(Location);
+        await TestLoadRootFileAsync(Location).ConfigureAwait(false);
     }
 
     [Test]
@@ -50,26 +50,25 @@ public class TestFile
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
-        await TestLoadRootFileAsync(Location);
+        await TestLoadRootFileAsync(Location).ConfigureAwait(false);
 #endif
     }
 
-    private async Task TestLoadRootFileAsync(ILocation location)
+    private static async Task TestLoadRootFileAsync(ILocation location)
     {
-        using var RootFolder = await Path.RootFolderFromAsync(location);
+        using var RootFolder = await Path.RootFolderFromAsync(location).ConfigureAwait(false);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Files, Has.Count.GreaterThan(0));
         var FirstFile = RootFolder.Files[0];
 
-        var LoadTask = FirstFile.LoadAsync();
-        LoadTask.Wait();
+        await FirstFile.LoadAsync().ConfigureAwait(false);
 
         using var Content = FirstFile.Content;
         Assert.That(Content, Is.Not.Null);
 
         using System.IO.StreamReader Reader = new(Content);
-        string ContentAsString = Reader.ReadToEnd();
+        string ContentAsString = await Reader.ReadToEndAsync().ConfigureAwait(false);
 
         Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
     }
@@ -78,7 +77,7 @@ public class TestFile
     public async Task TestLoadLocalSubfolderAsync()
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
-        await TestLoadSubfolderFileAsync(Location);
+        await TestLoadSubfolderFileAsync(Location).ConfigureAwait(false);
     }
 
     [Test]
@@ -86,13 +85,13 @@ public class TestFile
     {
 #if ENABLE_REMOTE
         ILocation Location = RootFolderStructure.GetRootAsRemoteLocation();
-        await TestLoadSubfolderFileAsync(Location);
+        await TestLoadSubfolderFileAsync(Location).ConfigureAwait(false);
 #endif
     }
 
-    private async Task TestLoadSubfolderFileAsync(ILocation location)
+    private static async Task TestLoadSubfolderFileAsync(ILocation location)
     {
-        using var RootFolder = await Path.RootFolderFromAsync(location);
+        using var RootFolder = await Path.RootFolderFromAsync(location).ConfigureAwait(false);
         Assert.That(RootFolder, Is.Not.Null);
 
         Assert.That(RootFolder.Folders, Has.Count.GreaterThan(0));
@@ -100,14 +99,13 @@ public class TestFile
         Assert.That(FirstFolder.Files, Has.Count.GreaterThan(0));
         var FirstFile = FirstFolder.Files[0];
 
-        var LoadTask = FirstFile.LoadAsync();
-        LoadTask.Wait();
+        await FirstFile.LoadAsync().ConfigureAwait(false);
 
         using var Content = FirstFile.Content;
         Assert.That(Content, Is.Not.Null);
 
         using System.IO.StreamReader Reader = new(Content);
-        string ContentAsString = Reader.ReadToEnd();
+        string ContentAsString = await Reader.ReadToEndAsync().ConfigureAwait(false);
 
         Assert.That(ContentAsString, Is.EqualTo(FirstFile.Path.Name));
     }

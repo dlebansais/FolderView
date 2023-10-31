@@ -16,12 +16,12 @@ internal static class Precondition
     /// <typeparam name="T">The reference type. Do not specify it, this should be automatically infered.</typeparam>
     /// <param name="reference">The reference to check.</param>
     /// <param name="callerMethodArgumentName">The name of the caller argument.</param>
-    /// <exception cref="System.NullReferenceException">If <paramref name="reference"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="reference"/> is null.</exception>
     [Conditional("DEBUG")]
-    public static void MustBeNotNull<T>(this T? reference, [CallerArgumentExpression("reference")] string callerMethodArgumentName = "")
+    public static void MustBeNotNull<T>(this T? reference, [CallerArgumentExpression(nameof(reference))] string callerMethodArgumentName = "")
         where T : class
     {
-        if (reference is null) throw new NullReferenceException(callerMethodArgumentName);
+        if (reference is null) throw new ArgumentNullException(callerMethodArgumentName);
     }
 
     /// <summary>
@@ -33,13 +33,13 @@ internal static class Precondition
     {
         if (location is LocalLocation AsLocal)
         {
-            if (AsLocal.LocalRoot is null) throw new NullReferenceException(nameof(LocalLocation.LocalRoot));
+            if (AsLocal.LocalRoot is null) throw new ArgumentException(nameof(LocalLocation.LocalRoot));
         }
         else if (location is GitHubLocation AsRemoteLocation)
         {
-            if (AsRemoteLocation.UserName is null) throw new NullReferenceException(nameof(GitHubLocation.UserName));
-            if (AsRemoteLocation.RepositoryName is null) throw new NullReferenceException(nameof(GitHubLocation.RepositoryName));
-            if (AsRemoteLocation.RemoteRoot is null) throw new NullReferenceException(nameof(GitHubLocation.RemoteRoot));
+            if (AsRemoteLocation.UserName is null) throw new ArgumentException(nameof(GitHubLocation.UserName));
+            if (AsRemoteLocation.RepositoryName is null) throw new ArgumentException(nameof(GitHubLocation.RepositoryName));
+            if (AsRemoteLocation.RemoteRoot is null) throw new ArgumentException(nameof(GitHubLocation.RemoteRoot));
         }
         else
         {
@@ -56,10 +56,10 @@ internal static class Precondition
     {
         if (folder is Folder AsFolder)
         {
-            if (AsFolder.Name is null) throw new NullReferenceException(nameof(Folder.Name));
-            if (AsFolder.Folders is null) throw new NullReferenceException(nameof(Folder.Folders));
+            if (AsFolder.Name is null) throw new ArgumentException(nameof(Folder.Name));
+            if (AsFolder.Folders is null) throw new ArgumentException(nameof(Folder.Folders));
             if (AsFolder.Folders is not FolderCollection) throw new ArgumentException($"Only {typeof(FolderCollection).FullName} is allowed to implement {nameof(IFolderCollection)}");
-            if (AsFolder.Files is null) throw new NullReferenceException(nameof(Folder.Files));
+            if (AsFolder.Files is null) throw new ArgumentException(nameof(Folder.Files));
             if (AsFolder.Files is not FileCollection) throw new ArgumentException($"Only {typeof(FileCollection).FullName} is allowed to implement {nameof(IFileCollection)}");
         }
         else
@@ -77,8 +77,8 @@ internal static class Precondition
     {
         if (path is Path AsPath)
         {
-            if (AsPath.Name is null) throw new NullReferenceException(nameof(Path.Name));
-            if (AsPath.Ancestors is null) throw new NullReferenceException(nameof(Path.Ancestors));
+            if (AsPath.Name is null) throw new ArgumentException(nameof(Path.Name));
+            if (AsPath.Ancestors is null) throw new ArgumentException(nameof(Path.Ancestors));
         }
         else
         {

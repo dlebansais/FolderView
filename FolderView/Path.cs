@@ -52,10 +52,10 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int Result = Name.GetHashCode();
+        int Result = Name.GetHashCode(StringComparison.InvariantCulture);
 
         foreach (string Ancestor in Ancestors)
-            Result ^= Ancestor.GetHashCode();
+            Result ^= Ancestor.GetHashCode(StringComparison.InvariantCulture);
 
         return Result;
     }
@@ -88,8 +88,8 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
         location.MustBeNotNull();
         location.MustBeValid();
 
-        (IFolderCollection Folders, IFileCollection Files) = await RootFolder.TryParseAsync(location);
-        RootFolder Result = new RootFolder(location, Folders, Files);
+        (IFolderCollection Folders, IFileCollection Files) = await RootFolder.TryParseAsync(location).ConfigureAwait(false);
+        RootFolder Result = new(location, Folders, Files);
 
         Result.EnsureNotNull();
         return Result;
@@ -102,8 +102,7 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// <param name="name">The name in the parent's path.</param>
     public static IPath Combine(IFolder? parent, string name)
     {
-        if (parent is not null)
-            parent.MustBeValid();
+        parent?.MustBeValid();
         name.MustBeNotNull();
 
         List<string> ParentNameList = parent is null

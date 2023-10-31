@@ -23,7 +23,7 @@ internal record File(IFolder? Parent, string Name) : IFile
     public async Task LoadAsync()
     {
         IFolder? RootParent = Parent;
-        while (RootParent is not null && RootParent is not RootFolder)
+        while (RootParent is not null and not RootFolder)
             RootParent = RootParent.Parent;
 
         Debug.Assert(RootParent is RootFolder);
@@ -33,7 +33,7 @@ internal record File(IFolder? Parent, string Name) : IFile
             LoadLocal(AsLocal);
 
         if (Location is GitHubLocation AsRemote)
-            await LoadRemoteAsync(AsRemote);
+            await LoadRemoteAsync(AsRemote).ConfigureAwait(false);
 
         Debug.Assert(Content is not null);
     }
@@ -48,8 +48,9 @@ internal record File(IFolder? Parent, string Name) : IFile
     {
         string AbsolutePath = remoteLocation.GetAbsolutePath(Path);
 
-        GitHubClient Client = new GitHubClient(new ProductHeaderValue(GitHubLocation.AppName));
-        var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, AbsolutePath);
+        ProductHeaderValue ProductInformation = new(GitHubLocation.AppName);
+        GitHubClient Client = new(ProductInformation);
+        var Contents = await Client.Repository.Content.GetAllContents(remoteLocation.UserName, remoteLocation.RepositoryName, AbsolutePath).ConfigureAwait(false);
 
         Debug.Assert(Contents.Count <= 1);
 

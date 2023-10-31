@@ -39,12 +39,12 @@ public static class TestTools
         return CurrentDirectory!;
     }
 
-    public static List<string> AsNameList(this IFolderCollection folders)
+    public static IList<string> AsNameList(this IFolderCollection folders)
     {
         return ((IList<IFolder>)folders).Select(item => item.Name).ToList();
     }
 
-    public static List<string> AsNameList(this IFileCollection files)
+    public static IList<string> AsNameList(this IFileCollection files)
     {
         return ((IList<IFile>)files).Select(item => item.Name).ToList();
     }
@@ -53,7 +53,7 @@ public static class TestTools
     {
         ILocation Location = RootFolderStructure.GetRootAsLocalLocation();
 
-        var RootFolder = await Path.RootFolderFromAsync(Location);
+        var RootFolder = await Path.RootFolderFromAsync(Location).ConfigureAwait(false);
 
         return RootFolder;
     }

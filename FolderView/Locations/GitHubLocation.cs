@@ -1,5 +1,6 @@
 ﻿namespace FolderView;
 
+using System;
 using System.Diagnostics;
 
 /// <summary>
@@ -19,6 +20,8 @@ public record GitHubLocation(string UserName, string RepositoryName, string Remo
     /// <inheritdoc/>
     public string GetAbsolutePath(IPath path)
     {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+
         string Result;
 
         Result = PathHelper.Combine(CanonicalRoot, ((Path)path).Combined);

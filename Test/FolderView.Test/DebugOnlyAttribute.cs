@@ -3,9 +3,11 @@
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-public class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
+public sealed class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
 {
+#if !DEBUG
     private const string Reason = "This test should be run in Debug configuration only";
+#endif
 
     public void ApplyToTest(Test test)
     {

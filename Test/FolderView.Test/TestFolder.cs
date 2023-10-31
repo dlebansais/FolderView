@@ -1,6 +1,6 @@
 ﻿namespace FolderView.Test;
 
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ public class TestFolder
     [Test]
     public async Task TestWithLocalUriAsync()
     {
-        using var RootFolder = await TestTools.LoadLocalRootAsync();
+        using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
@@ -24,7 +24,7 @@ public class TestFolder
         TestRootNoMoreFolder(RootSubfolders, 3);
     }
 
-    private void TestRootSubfolder(IFolderCollection rootSubfolders, int index, List<string> folderNames, List<string> fileNames)
+    private static void TestRootSubfolder(IFolderCollection rootSubfolders, int index, Collection<string> folderNames, Collection<string> fileNames)
     {
         IFolder TestObject = rootSubfolders[index];
         Assert.That(TestObject, Is.Not.Null);
@@ -38,7 +38,7 @@ public class TestFolder
         CollectionAssert.AreEquivalent(TestObjectFileNames, fileNames);
     }
 
-    private void TestRootNoMoreFolder(IFolderCollection rootSubfolders, int index)
+    private static void TestRootNoMoreFolder(IFolderCollection rootSubfolders, int index)
     {
         Assert.That(rootSubfolders, Has.Count.EqualTo(index));
     }
