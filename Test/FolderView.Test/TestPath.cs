@@ -165,25 +165,25 @@ public class TestPath
         Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new(new List<string>(), RootFolderStructure.RootFiles[0]);
 
-        Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(null!).ConfigureAwait(false));
+        Exception = Assert.ThrowsAsync<ArgumentNullException>(async () => await Path.RootFolderFromAsync(null!).ConfigureAwait(false));
         Assert.That(Exception.Message, Is.EqualTo("location"));
 
         const IFolder? NullFolder = null;
-        Exception = Assert.Throws<ArgumentException>(() => Path.Combine(NullFolder, null!));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.Combine(NullFolder, null!));
         Assert.That(Exception.Message, Is.EqualTo("name"));
 
         const IPath? NullPath = null!;
         Exception = Assert.Throws<ArgumentException>(() => Path.Combine(NullPath, string.Empty));
         Assert.That(Exception.Message, Is.EqualTo("parent"));
 
-        Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFolder(null!, FirstLevelFolderPath));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.GetRelativeFolder(null!, FirstLevelFolderPath));
         Assert.That(Exception.Message, Is.EqualTo("parent"));
-        Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFolder(RootFolder, null!));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.GetRelativeFolder(RootFolder, null!));
         Assert.That(Exception.Message, Is.EqualTo("path"));
 
-        Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(null!, FirstLevelFilePath));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.GetRelativeFile(null!, FirstLevelFilePath));
         Assert.That(Exception.Message, Is.EqualTo("parent"));
-        Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(RootFolder, null!));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.GetRelativeFile(RootFolder, null!));
         Assert.That(Exception.Message, Is.EqualTo("path"));
     }
 
