@@ -59,26 +59,26 @@ public class TestLocation
         PropertyName = "LocalRoot";
         var LocationInvalidLocalRoot = RootFolderStructure.GetRootAsLocalLocation();
         LocationInvalidLocalRoot.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidLocalRoot, null!);
-        Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidLocalRoot).ConfigureAwait(false));
+        Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(LocationInvalidLocalRoot).ConfigureAwait(false));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
 #if ENABLE_REMOTE
         PropertyName = "UserName";
         var LocationInvalidUserName = RootFolderStructure.GetRootAsRemoteLocation();
         LocationInvalidUserName.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidUserName, null!);
-        Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidUserName).ConfigureAwait(false));
+        Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(LocationInvalidUserName).ConfigureAwait(false));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "RepositoryName";
         var LocationInvalidRepositoryName = RootFolderStructure.GetRootAsRemoteLocation();
         LocationInvalidRepositoryName.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidRepositoryName, null!);
-        Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidRepositoryName).ConfigureAwait(false));
+        Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(LocationInvalidRepositoryName).ConfigureAwait(false));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 
         PropertyName = "RemoteRoot";
         var LocationInvalidRemoteRoot = RootFolderStructure.GetRootAsRemoteLocation();
         LocationInvalidRemoteRoot.GetType().GetProperty(PropertyName)!.SetValue(LocationInvalidRemoteRoot, null!);
-        Exception = Assert.ThrowsAsync<NullReferenceException>(async () => await Path.RootFolderFromAsync(LocationInvalidRemoteRoot).ConfigureAwait(false));
+        Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(LocationInvalidRemoteRoot).ConfigureAwait(false));
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 #endif
     }
