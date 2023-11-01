@@ -173,7 +173,7 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain("name"));
 
         const IPath? NullPath = null!;
-        Exception = Assert.Throws<ArgumentException>(() => Path.Combine(NullPath, string.Empty));
+        Exception = Assert.Throws<ArgumentNullException>(() => Path.Combine(NullPath, string.Empty));
         Assert.That(Exception.Message, Does.Contain("parent"));
 
         Exception = Assert.Throws<ArgumentNullException>(() => Path.GetRelativeFolder(null!, FirstLevelFolderPath));
