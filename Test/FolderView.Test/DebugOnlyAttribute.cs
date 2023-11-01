@@ -1,5 +1,6 @@
 ﻿namespace NUnit.Framework;
 
+using System.Diagnostics;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -11,6 +12,8 @@ public sealed class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
 
     public void ApplyToTest(Test test)
     {
+        Debug.Assert(test is not null);
+
 #if !DEBUG
         test.RunState = RunState.Ignored;
         test.Properties.Set(PropertyNames.SkipReason, Reason);
