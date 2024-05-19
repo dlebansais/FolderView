@@ -19,8 +19,8 @@ public static class PathHelper
     /// <exception cref="ArgumentNullException"><paramref name="path1"/> or <paramref name="path2"/> is null.</exception>
     public static string Combine(string path1, string path2)
     {
-        if (path1 is null) throw new ArgumentNullException(nameof(path1));
-        if (path2 is null) throw new ArgumentNullException(nameof(path2));
+        ArgumentNullException.ThrowIfNull(path1);
+        ArgumentNullException.ThrowIfNull(path2);
 
         int SlashSeparatorCount = CountCharacter(path1, SlashSeparator) + CountCharacter(path2, SlashSeparator);
         int BackslashSeparatorCount = CountCharacter(path1, BackslashSeparator) + CountCharacter(path2, BackslashSeparator);
@@ -47,7 +47,7 @@ public static class PathHelper
     /// <param name="path">The path.</param>
     public static string GetFullPath(string path)
     {
-        if (path is null) throw new ArgumentNullException(nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
         int SlashSeparatorCount = CountCharacter(path, SlashSeparator);
         int BackslashSeparatorCount = CountCharacter(path, BackslashSeparator);

@@ -18,7 +18,7 @@ init:
 
 environment:
   package_token:
-    secure: PTQKv7f2BGNT8I1SUx4ErllBziAj7gs+VDcm2h3c8mJ5jtRuGognMEIPm2hPn1NI
+    secure: oeB0vPa3ehegduJ/WnxLssnK6wiIc8MVx0lVYeiXKT6pIz9ZDQ4ioQ55g6GYz9dW
   opencover_version: 4.7.1221
   codecov_version: 0.2.4
   csharp-format_version: 0.0.9
@@ -42,7 +42,7 @@ after_build:
   - nuget install Packager -DependencyVersion Highest -OutputDirectory packages # Install Packager
   - ps: $folder = Get-ChildItem -Path packages/Packager.* -Name | Out-String    # Get the installation folder (we don't know the actual version)
   - ps: $firstline = ($folder -split '\r\n')[0]                                 # Get rid of carriage-return
-  - ps: $fullpath = ".\packages\$firstline\lib\net48\Packager.exe"              # Build full path
+  - ps: $fullpath = ".\packages\$firstline\lib\net481\Packager.exe"             # Build full path
   - ps: $env:PACKAGER_PATH=$fullpath
   - '%PACKAGER_PATH% %CUSTOM_PACKAGER_OPTIONS%'                                 # Execute the packager: the output is nuget\%APPVEYOR_PROJECT_NAME%.nuspec
   - if exist nuget\%APPVEYOR_PROJECT_NAME%.nuspec nuget pack nuget\%APPVEYOR_PROJECT_NAME%.nuspec
@@ -77,17 +77,15 @@ after_test:
 artifacts:
   - path: $(APPVEYOR_PROJECT_NAME)-Debug.*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Debug
-    type: NuGetPackage
   - path: $(APPVEYOR_PROJECT_NAME).*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Release
-    type: NuGetPackage
 
 deploy:
   - provider: GitHub
     release: $(VERSION_TAG)
     description: 'Automatic deployment'
     auth_token:
-      secure: PGOJYgFAVX0/IAmEa0Hw+iMT55A5kqaTohVegxgeonUCrIpgFMqP8W2l79Qc8hn+
+      secure: 8IyH+0A5FwE96xWDzhXQH5zxg49+0MhTd25bUTMcc6qePhZcVmaVd6i0bsM2tT1Q
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Release
     draft: false
     prerelease: false
@@ -98,7 +96,7 @@ deploy:
     release: $(VERSION_TAG)
     description: 'Automatic deployment'
     auth_token:
-      secure: PGOJYgFAVX0/IAmEa0Hw+iMT55A5kqaTohVegxgeonUCrIpgFMqP8W2l79Qc8hn+
+      secure: 8IyH+0A5FwE96xWDzhXQH5zxg49+0MhTd25bUTMcc6qePhZcVmaVd6i0bsM2tT1Q
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Debug
     draft: false
     prerelease: false
@@ -119,7 +117,7 @@ deploy:
     artifact: $(APPVEYOR_PROJECT_NAME)-Package-Debug
     username: dlebansais
     api_key:
-      secure: mknFmVMr6KwG8AMwKaSrDH30g+usOXvXQMqEKDES4g4X+dBDLDk3g3/x3Al3vcDl
+      secure: P1otXPxREK8T2L9vw4vpvvpXYlMyCTGa/iQIfuXtr4mjOFZBYR83Aie3hTZotfOu
     on:
       branch: deployment
       configuration: Debug
@@ -129,7 +127,7 @@ deploy:
     skip_symbols: true
     username: dlebansais
     api_key:
-      secure: mknFmVMr6KwG8AMwKaSrDH30g+usOXvXQMqEKDES4g4X+dBDLDk3g3/x3Al3vcDl
+      secure: P1otXPxREK8T2L9vw4vpvvpXYlMyCTGa/iQIfuXtr4mjOFZBYR83Aie3hTZotfOu
     on:
       branch: deployment
       configuration: Release

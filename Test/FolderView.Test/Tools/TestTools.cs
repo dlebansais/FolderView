@@ -22,6 +22,8 @@ public static class TestTools
             {
                 case "net7.0":
                 case "net7.0-windows7.0":
+                case "net8.0":
+                case "net8.0-windows7.0":
                 case "Debug":
                 case "Release":
                 case "x64":

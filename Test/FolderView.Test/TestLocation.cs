@@ -39,7 +39,7 @@ public class TestLocation
     [Test]
     public void TestFake()
     {
-        ILocation Location = new FakeLocation();
+        FakeLocation Location = new();
         Exception Exception = Assert.ThrowsAsync<ArgumentException>(async () => await Path.RootFolderFromAsync(Location).ConfigureAwait(false));
 
         Assert.That(Exception.Message, Does.Contain(nameof(ILocation)));

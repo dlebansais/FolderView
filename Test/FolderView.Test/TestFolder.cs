@@ -14,8 +14,8 @@ public class TestFolder
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
-        CollectionAssert.AreEquivalent(RootFolderNames, RootFolderStructure.RootFolders);
 
+        Assert.That(RootFolderNames, Is.EquivalentTo(RootFolderStructure.RootFolders));
         Assert.That(RootSubfolders, Has.Count.EqualTo(RootFolderStructure.RootFolders.Count));
 
         TestRootSubfolder(RootSubfolders, 0, RootFolderStructure.Folder_0_0_Folders, RootFolderStructure.Folder_0_0_Files);
@@ -32,10 +32,10 @@ public class TestFolder
         Assert.That(TestObject.Name, Is.EqualTo(RootFolderStructure.RootFolders[index]));
 
         var TestObjectFolderNames = TestObject.Folders.AsNameList();
-        CollectionAssert.AreEquivalent(TestObjectFolderNames, folderNames);
+        Assert.That(TestObjectFolderNames, Is.EquivalentTo(folderNames));
 
         var TestObjectFileNames = TestObject.Files.AsNameList();
-        CollectionAssert.AreEquivalent(TestObjectFileNames, fileNames);
+        Assert.That(TestObjectFileNames, Is.EquivalentTo(fileNames));
     }
 
     private static void TestRootNoMoreFolder(IFolderCollection rootSubfolders, int index)

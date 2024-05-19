@@ -34,12 +34,12 @@ public class TestRootFolder
         var TestObjectFolderNames = TestObjectFolders.AsNameList();
 
         Assert.That(TestObjectFolderNames, Has.Count.EqualTo(RootFolderStructure.RootFolders.Count));
-        CollectionAssert.AreEquivalent(TestObjectFolderNames, RootFolderStructure.RootFolders);
+        Assert.That(TestObjectFolderNames, Is.EquivalentTo(RootFolderStructure.RootFolders));
 
         var TestObjectFiles = rootFolder.Files;
         var TestObjectFileNames = TestObjectFiles.AsNameList();
 
         Assert.That(TestObjectFileNames, Has.Count.EqualTo(RootFolderStructure.RootFiles.Count));
-        CollectionAssert.AreEquivalent(TestObjectFileNames, RootFolderStructure.RootFiles);
+        Assert.That(TestObjectFileNames, Is.EquivalentTo(RootFolderStructure.RootFiles));
     }
 }

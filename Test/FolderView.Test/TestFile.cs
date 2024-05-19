@@ -16,7 +16,7 @@ public class TestFile
 
         var RootFiles = RootFolder.Files;
         var RootFileNames = RootFiles.AsNameList();
-        CollectionAssert.AreEquivalent(RootFileNames, RootFolderStructure.RootFiles);
+        Assert.That(RootFileNames, Is.EquivalentTo(RootFolderStructure.RootFiles));
 
         Assert.That(RootFiles, Has.Count.EqualTo(RootFolderStructure.RootFiles.Count));
 

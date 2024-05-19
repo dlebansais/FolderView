@@ -13,7 +13,7 @@ public record LocalLocation(string LocalRoot) : ILocation
     /// <inheritdoc/>
     public string GetAbsolutePath(IPath path)
     {
-        if (path is null) throw new ArgumentNullException(nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
         string Result = CanonicalRoot;
 
