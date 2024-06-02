@@ -317,6 +317,9 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(FolderInvalidFiles, FirstLevelFilePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));
+
+        var OtherFakeFolder = ((IFolder)FakeFolder).Clone();
+        Assert.That(OtherFakeFolder, Is.EqualTo(FakeFolder));
     }
 
     [Test]

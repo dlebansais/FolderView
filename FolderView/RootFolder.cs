@@ -1,5 +1,6 @@
 ﻿namespace FolderView;
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +11,7 @@ using Octokit;
 /// Provides a view of the root folder in a folder structure.
 /// </summary>
 [DebuggerDisplay("(root)")]
-internal record RootFolder : Folder
+internal record RootFolder : Folder, IFolder
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RootFolder"/> class.
@@ -167,5 +168,11 @@ internal record RootFolder : Folder
         }
 
         return Result;
+    }
+
+    /// <inheritdoc/>
+    object ICloneable.Clone()
+    {
+        return this with { };
     }
 }

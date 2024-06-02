@@ -13,8 +13,9 @@ public class TestFolder
         using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
 
         Assert.That(RootFolder.IsRoot, Is.True);
-        Assert.That(RootFolder.ToString(), Contains.Substring(nameof(RootFolder.IsRoot)));
-        Assert.That(RootFolder.Equals(RootFolder), Is.True);
+
+        var OtherRootFolder = RootFolder.Clone();
+        Assert.That(OtherRootFolder, Is.EqualTo(RootFolder));
 
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
@@ -40,6 +41,9 @@ public class TestFolder
 
         var TestObjectFileNames = TestObject.Files.AsNameList();
         Assert.That(TestObjectFileNames, Is.EquivalentTo(fileNames));
+
+        var OtherTestObject = TestObject.Clone();
+        Assert.That(OtherTestObject, Is.EqualTo(TestObject));
     }
 
     private static void TestRootNoMoreFolder(IFolderCollection rootSubfolders, int index)

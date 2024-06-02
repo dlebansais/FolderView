@@ -16,6 +16,12 @@ internal record Folder(IFolder? Parent, string Name, IFolderCollection Folders, 
     /// <inheritdoc/>
     public IPath Path => FolderView.Path.Combine(Parent, Name);
 
+    /// <inheritdoc/>
+    object ICloneable.Clone()
+    {
+        return this with { };
+    }
+
     /// <summary>
     /// Disposes of resources.
     /// </summary>

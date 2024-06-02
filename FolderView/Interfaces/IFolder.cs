@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// Abstraction of a folder.
 /// </summary>
-public interface IFolder : IDisposable
+public interface IFolder : ICloneable, IDisposable
 {
     /// <summary>
     /// Gets the folder's parent folder, <see langword="null"/> in the root folder.
