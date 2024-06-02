@@ -12,6 +12,10 @@ public class TestFolder
     {
         using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
 
+        Assert.That(RootFolder.IsRoot, Is.True);
+        Assert.That(RootFolder.ToString(), Contains.Substring(nameof(RootFolder.IsRoot)));
+        Assert.That(RootFolder.Equals(RootFolder), Is.True);
+
         var RootSubfolders = RootFolder.Folders;
         var RootFolderNames = RootSubfolders.AsNameList();
 

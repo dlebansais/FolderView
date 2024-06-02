@@ -18,23 +18,23 @@ public static class TestTools
             string? ParentFolder = System.IO.Path.GetDirectoryName(CurrentDirectory);
             string? FileName = System.IO.Path.GetFileName(CurrentDirectory);
 
-            switch (FileName)
+            List<string?> KnownFolderNames = new()
             {
-                case "net481":
-                case "net7.0":
-                case "net7.0-windows7.0":
-                case "net8.0":
-                case "net8.0-windows7.0":
-                case "Debug":
-                case "Release":
-                case "x64":
-                case "bin":
-                    CurrentDirectory = ParentFolder;
-                    continue;
-                default:
-                    Continue = false;
-                    break;
-            }
+                "net481",
+                "net7.0",
+                "net7.0-windows7.0",
+                "net8.0",
+                "net8.0-windows7.0",
+                "Debug",
+                "Release",
+                "x64",
+                "bin",
+            };
+
+            if (KnownFolderNames.Contains(FileName))
+                CurrentDirectory = ParentFolder;
+            else
+                Continue = false;
         }
 
         Debug.Assert(CurrentDirectory is not null);
