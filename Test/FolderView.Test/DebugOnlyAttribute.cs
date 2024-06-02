@@ -15,8 +15,8 @@ public sealed class DebugOnlyAttribute : NUnitAttribute, IApplyToTest
         Debug.Assert(test is not null);
 
 #if !DEBUG
-        test.RunState = RunState.Ignored;
-        test.Properties.Set(PropertyNames.SkipReason, Reason);
+        test!.RunState = RunState.Ignored;
+        test!.Properties.Set(PropertyNames.SkipReason, Reason);
 #endif
     }
 }
