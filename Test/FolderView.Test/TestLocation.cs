@@ -24,13 +24,31 @@ public class TestLocation
     }
 
     [Test]
-    public void TestCanonicalPath()
+    public void TestLocalAbsolutePath()
     {
         LocalLocation Location = (LocalLocation)RootFolderStructure.GetRootAsLocalLocation();
         Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
 
         string AbsolutePath = Location.GetAbsolutePath(FirstLevelFolderPath);
         string? AbsolutePathFolder = System.IO.Path.GetDirectoryName(AbsolutePath);
+
+        Assert.That(AbsolutePathFolder, Is.EqualTo(Location.CanonicalRoot));
+    }
+
+    [Test]
+    public void TestRemoteAbsolutePath()
+    {
+        GitHubLocation Location = (GitHubLocation)RootFolderStructure.GetRootAsRemoteLocation();
+        Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
+
+        string AbsolutePath = Location.GetAbsolutePath(FirstLevelFolderPath);
+        string? AbsolutePathFolder = System.IO.Path.GetDirectoryName(AbsolutePath);
+
+#if NET6_0_OR_GREATER
+        AbsolutePathFolder = AbsolutePathFolder?.Replace("\\", "/", StringComparison.OrdinalIgnoreCase);
+#else
+        AbsolutePathFolder = AbsolutePathFolder?.Replace("\\", "/");
+#endif
 
         Assert.That(AbsolutePathFolder, Is.EqualTo(Location.CanonicalRoot));
     }

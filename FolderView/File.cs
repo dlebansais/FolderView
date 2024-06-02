@@ -23,11 +23,11 @@ internal record File(IFolder? Parent, string Name) : IFile
     /// <inheritdoc/>
     public async Task LoadAsync()
     {
-        IFolder? RootParent = Parent;
-        while (RootParent is not null and not RootFolder)
-            RootParent = RootParent.Parent;
+        IFolder Folder = Contract.AssertNotNull(Parent);
+        while (Folder is not RootFolder)
+            Folder = Contract.AssertNotNull(Folder.Parent);
 
-        ILocation Location = Contract.AssertNotNull(RootParent as RootFolder).Location;
+        ILocation Location = Contract.AssertNotNull(Folder as RootFolder).Location;
 
         if (Location is LocalLocation AsLocal)
             LoadLocal(AsLocal);

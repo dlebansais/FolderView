@@ -27,9 +27,6 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     {
         get
         {
-            if (Ancestors is null)
-                return string.Empty;
-
             string Result = string.Empty;
 
             foreach (string Ancestor in Ancestors)

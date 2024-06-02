@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NotFoundException = System.IO.FileNotFoundException;
 
 [TestFixture]
 public class TestPath
@@ -28,6 +29,9 @@ public class TestPath
 
         Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
         IFolder FirstLevelFolder = Path.GetRelativeFolder(RootFolder, FirstLevelFolderPath);
+
+        Path InvalidFolderPath = new(new List<string>(), "Invalid");
+        _ = Assert.Throws<NotFoundException>(() => _ = Path.GetRelativeFolder(RootFolder, InvalidFolderPath));
 
         CombineResult = Path.Combine(FirstLevelFolder, RootFolderStructure.Folder_0_0_Folders[0]);
 
@@ -74,6 +78,12 @@ public class TestPath
         IFile GetResult = Path.GetRelativeFile(RootFolder, FirstLevelFilePath);
 
         Assert.That(GetResult, Is.EqualTo(RootFolder.Files[0]));
+
+        Path InvalidFolderPath = new(new List<string>() { "Invalid" }, "Invalid");
+        _ = Assert.Throws<NotFoundException>(() => _ = Path.GetRelativeFile(RootFolder, InvalidFolderPath));
+
+        Path InvalidFilePath = new(new List<string>(), "Invalid");
+        _ = Assert.Throws<NotFoundException>(() => _ = Path.GetRelativeFile(RootFolder, InvalidFilePath));
     }
 
     [Test]
@@ -111,6 +121,14 @@ public class TestPath
         IFolder GetResult = Path.GetRelativeFolder(SecondLevelFolder, AncestorLevelFolderPath);
 
         Assert.That(GetResult, Is.EqualTo(RootFolder.Folders[0]));
+
+        Path InvalidFolderPath = new(new List<string>() { Path.Ancestor, "Invalid" }, RootFolderStructure.RootFolders[0]);
+
+        _ = Assert.Throws<NotFoundException>(() => _ = Path.GetRelativeFolder(SecondLevelFolder, InvalidFolderPath));
+
+        Path TooDeepFolderPath = new(new List<string>() { Path.Ancestor, Path.Ancestor, Path.Ancestor }, RootFolderStructure.RootFolders[0]);
+
+        _ = Assert.Throws<NotFoundException>(() => _ = Path.GetRelativeFolder(SecondLevelFolder, TooDeepFolderPath));
     }
 
     [Test]
@@ -199,6 +217,9 @@ public class TestPath
 
         Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
         Path FirstLevelFilePath = new(new List<string>(), RootFolderStructure.RootFiles[0]);
+
+        _ = Assert.Throws<InvalidOperationException>(() => _ = FirstLevelFolderPath.Up());
+        _ = Assert.Throws<InvalidOperationException>(() => _ = FirstLevelFolderPath.Up());
 
         PropertyName = "Name";
         var FolderInvalidName = await Path.RootFolderFromAsync(Location).ConfigureAwait(false);
@@ -296,5 +317,28 @@ public class TestPath
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));
         Exception = Assert.Throws<ArgumentException>(() => Path.GetRelativeFile(FolderInvalidFiles, FirstLevelFilePath));
         Assert.That(Exception.Message, Does.Contain(nameof(IFileCollection)));
+    }
+
+    [Test]
+    public void TestEqual()
+    {
+        Path FolderPath = new(new List<string>(), "Folder");
+        Path FilePath = new(new List<string>(), "File");
+
+        Assert.That(FolderPath.Equals(FolderPath), Is.True);
+        Assert.That(FilePath.Equals(FilePath), Is.True);
+        Assert.That(FolderPath.Equals(FilePath), Is.False);
+
+        Path SubFolderPath = new(new List<string>() { "Root" }, "Folder");
+
+        Assert.That(SubFolderPath.Equals(SubFolderPath), Is.True);
+        Assert.That(FolderPath.Equals(SubFolderPath), Is.False);
+        Assert.That(SubFolderPath.Equals(FolderPath), Is.False);
+
+        const Path? NullPath = null;
+
+#pragma warning disable CA1508 // Avoid dead conditional code (the analyzer is wrong there)
+        Assert.That(FolderPath.Equals(NullPath), Is.False);
+#pragma warning restore CA1508 // Avoid dead conditional code
     }
 }
