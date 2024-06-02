@@ -19,22 +19,39 @@ public static class PathHelper
     /// <exception cref="ArgumentNullException"><paramref name="path1"/> or <paramref name="path2"/> is null.</exception>
     public static string Combine(string path1, string path2)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(path1);
         ArgumentNullException.ThrowIfNull(path2);
+#else
+        if (path1 is null)
+            throw new ArgumentNullException(nameof(path1));
+        if (path2 is null)
+            throw new ArgumentNullException(nameof(path2));
+#endif
 
         int SlashSeparatorCount = CountCharacter(path1, SlashSeparator) + CountCharacter(path2, SlashSeparator);
         int BackslashSeparatorCount = CountCharacter(path1, BackslashSeparator) + CountCharacter(path2, BackslashSeparator);
         char PreferredSeparator = SlashSeparatorCount > BackslashSeparatorCount ? SlashSeparator : BackslashSeparator;
 
         bool Path1EndsWithSeparator = false;
+#if NET6_0_OR_GREATER
         Path1EndsWithSeparator |= path1.EndsWith(SlashSeparator);
         Path1EndsWithSeparator |= path1.EndsWith(BackslashSeparator);
+#else
+        Path1EndsWithSeparator |= path1.EndsWith($"{SlashSeparator}", StringComparison.Ordinal);
+        Path1EndsWithSeparator |= path1.EndsWith($"{BackslashSeparator}", StringComparison.Ordinal);
+#endif
 
         string TrimmedPath1 = Path1EndsWithSeparator ? path1.Substring(0, path1.Length - 1) : path1;
 
         bool Path2StartsWithSeparator = false;
+#if NET6_0_OR_GREATER
         Path2StartsWithSeparator |= path2.StartsWith(SlashSeparator);
         Path2StartsWithSeparator |= path2.StartsWith(BackslashSeparator);
+#else
+        Path2StartsWithSeparator |= path2.StartsWith($"{SlashSeparator}", StringComparison.Ordinal);
+        Path2StartsWithSeparator |= path2.StartsWith($"{BackslashSeparator}", StringComparison.Ordinal);
+#endif
 
         string TrimmedPath2 = Path2StartsWithSeparator ? path2.Substring(1) : path2;
 
@@ -47,14 +64,24 @@ public static class PathHelper
     /// <param name="path">The path.</param>
     public static string GetFullPath(string path)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(path);
+#else
+        if (path is null)
+            throw new ArgumentNullException(nameof(path));
+#endif
 
         int SlashSeparatorCount = CountCharacter(path, SlashSeparator);
         int BackslashSeparatorCount = CountCharacter(path, BackslashSeparator);
         char PreferredSeparator = SlashSeparatorCount > BackslashSeparatorCount ? SlashSeparator : BackslashSeparator;
 
         string PathWithNormalizedSeparator = path.Replace(SlashSeparator, PreferredSeparator).Replace(BackslashSeparator, PreferredSeparator);
+
+#if NET6_0_OR_GREATER
         bool PathStartsWithSeparator = PathWithNormalizedSeparator.StartsWith(PreferredSeparator);
+#else
+        bool PathStartsWithSeparator = PathWithNormalizedSeparator.StartsWith($"{PreferredSeparator}", StringComparison.Ordinal);
+#endif
 
         if (PathStartsWithSeparator)
             PathWithNormalizedSeparator = PathWithNormalizedSeparator.Substring(1);
@@ -71,7 +98,11 @@ public static class PathHelper
             else
                 throw new ArgumentException(null, nameof(path));
 
+#if NET6_0_OR_GREATER
         string Result = string.Join(PreferredSeparator, CombinedPaths);
+#else
+        string Result = string.Join($"{PreferredSeparator}", CombinedPaths);
+#endif
 
         if (PathStartsWithSeparator)
             Result = PreferredSeparator + Result;

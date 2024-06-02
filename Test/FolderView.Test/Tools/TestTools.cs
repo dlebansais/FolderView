@@ -20,6 +20,7 @@ public static class TestTools
 
             switch (FileName)
             {
+                case "net481":
                 case "net7.0":
                 case "net7.0-windows7.0":
                 case "net8.0":

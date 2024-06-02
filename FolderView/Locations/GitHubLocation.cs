@@ -20,7 +20,12 @@ public record GitHubLocation(string UserName, string RepositoryName, string Remo
     /// <inheritdoc/>
     public string GetAbsolutePath(IPath path)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(path);
+#else
+        if (path is null)
+            throw new ArgumentNullException(nameof(path));
+#endif
 
         string Result;
 

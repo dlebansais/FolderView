@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Contracts;
 using Octokit;
 
 /// <summary>
@@ -26,8 +27,7 @@ internal record File(IFolder? Parent, string Name) : IFile
         while (RootParent is not null and not RootFolder)
             RootParent = RootParent.Parent;
 
-        Debug.Assert(RootParent is RootFolder);
-        ILocation Location = ((RootFolder)RootParent).Location;
+        ILocation Location = Contract.AssertNotNull(RootParent as RootFolder).Location;
 
         if (Location is LocalLocation AsLocal)
             LoadLocal(AsLocal);

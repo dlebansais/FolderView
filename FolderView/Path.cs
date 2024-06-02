@@ -52,10 +52,20 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// <inheritdoc/>
     public override int GetHashCode()
     {
+#if NET6_0_OR_GREATER
         int Result = Name.GetHashCode(StringComparison.InvariantCulture);
+#else
+        int Result = Name.GetHashCode();
+#endif
 
         foreach (string Ancestor in Ancestors)
+        {
+#if NET6_0_OR_GREATER
             Result ^= Ancestor.GetHashCode(StringComparison.InvariantCulture);
+#else
+            Result ^= Ancestor.GetHashCode();
+#endif
+        }
 
         return Result;
     }
