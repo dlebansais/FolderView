@@ -104,11 +104,17 @@ public class TestLocation
     [Test]
     public void TestEmptyLocation()
     {
-        EmptyLocation Location = new();
+        EmptyLocation Location = EmptyLocation.Instance;
         EmptyLocation OtherLocation = Location with { };
 
         Assert.That(Location, Is.EqualTo(OtherLocation));
         Assert.That(Location.Equals(OtherLocation), Is.True);
+
+        IFolder Root = EmptyLocation.Root;
+        Assert.That(Root.Parent, Is.Null);
+        Assert.That(Root.Name, Is.Empty);
+        Assert.That(Root.Folders, Is.Empty);
+        Assert.That(Root.Files, Is.Empty);
 
         _ = Assert.Throws<NotSupportedException>(() => Location.GetAbsolutePath(Path.Empty));
     }
