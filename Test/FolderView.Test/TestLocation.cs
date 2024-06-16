@@ -100,4 +100,16 @@ public class TestLocation
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 #endif
     }
+
+    [Test]
+    public void TestEmptyLocation()
+    {
+        EmptyLocation Location = new();
+        EmptyLocation OtherLocation = new();
+
+        Assert.That(Location, Is.EqualTo(OtherLocation));
+        Assert.That(Location.Equals(OtherLocation), Is.True);
+
+        _ = Assert.Throws<NotSupportedException>(() => Location.GetAbsolutePath(Path.Empty));
+    }
 }

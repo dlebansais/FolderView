@@ -344,4 +344,14 @@ public class TestPath
         Assert.That(FolderPath.Equals(NullPath), Is.False);
 #pragma warning restore CA1508 // Avoid dead conditional code
     }
+
+    [Test]
+    public void TestEmpty()
+    {
+        Path TestPath = Path.Empty;
+        Path OtherTestPath = Path.Empty;
+
+        Assert.That(TestPath, Is.EqualTo(OtherTestPath));
+        Assert.That(TestPath.Equals(OtherTestPath), Is.True);
+    }
 }

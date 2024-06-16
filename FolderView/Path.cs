@@ -16,6 +16,11 @@ using NotFoundException = System.IO.FileNotFoundException;
 public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Path>
 {
     /// <summary>
+    /// Gets the empty path.
+    /// </summary>
+    public static Path Empty { get; } = new(new List<string>(), string.Empty);
+
+    /// <summary>
     /// Defines the ancestor string in path.
     /// </summary>
     public const string Ancestor = "..";
