@@ -105,7 +105,7 @@ public class TestLocation
     public void TestEmptyLocation()
     {
         EmptyLocation Location = new();
-        EmptyLocation OtherLocation = new();
+        EmptyLocation OtherLocation = Location with { };
 
         Assert.That(Location, Is.EqualTo(OtherLocation));
         Assert.That(Location.Equals(OtherLocation), Is.True);
