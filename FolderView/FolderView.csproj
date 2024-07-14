@@ -7,9 +7,9 @@
         <Platforms>x64</Platforms>
 
         <RootNamespace>FolderView</RootNamespace>
-        <Version>1.0.8</Version>
-        <AssemblyVersion>1.0.8.7</AssemblyVersion>
-        <FileVersion>1.0.8.7</FileVersion>
+        <Version>1.0.9</Version>
+        <AssemblyVersion>1.0.9.9</AssemblyVersion>
+        <FileVersion>1.0.9.9</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Company />
         <Product />
@@ -68,7 +68,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
 
-        <PackageReference Include="Octokit" Version="11.0.1" />
+        <PackageReference Include="Octokit" Version="13.0.1" />
         <PackageReference Include="Method.Contracts-Debug" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
         <PackageReference Include="Method.Contracts" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
