@@ -13,7 +13,7 @@ using NotFoundException = System.IO.FileNotFoundException;
 /// </summary>
 /// <inheritdoc/>
 [DebuggerDisplay("{Combined,nq}")]
-public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Path>
+public partial record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Path>
 {
     /// <summary>
     /// Gets the empty path.
@@ -95,15 +95,14 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// Gets a root folder from a local path or remote address.
     /// </summary>
     /// <param name="location">The location of the root.</param>
-    public static async Task<IFolder> RootFolderFromAsync(ILocation location)
+    [RequireNotNull(nameof(location))]
+    [Require("location.IsValid()")]
+    [Ensure("Result.IsNotNull()")]
+    private static async Task<IFolder> RootFolderFromAsyncVerified(ILocation location)
     {
-        location.MustBeNotNull();
-        location.MustBeValid();
-
         (IFolderCollection Folders, IFileCollection Files) = await RootFolder.TryParseAsync(location).ConfigureAwait(false);
         RootFolder Result = new(location, Folders, Files);
 
-        Result.EnsureNotNull();
         return Result;
     }
 
@@ -112,11 +111,11 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// </summary>
     /// <param name="parent">The parent.</param>
     /// <param name="name">The name in the parent's path.</param>
-    public static IPath Combine(IFolder? parent, string name)
+    [Require("parent is null || parent.IsValid()")]
+    [RequireNotNull(nameof(name))]
+    [Ensure("Result.IsNotNull()")]
+    private static IPath CombineVerified(IFolder? parent, string name)
     {
-        parent?.MustBeValid();
-        name.MustBeNotNull();
-
         List<string> ParentNameList = parent is null
             ? new List<string>()
             : parent.Name == string.Empty
@@ -125,7 +124,6 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
 
         IPath Result = new Path(ParentNameList, name);
 
-        Result.EnsureNotNull();
         return Result;
     }
 
@@ -134,16 +132,15 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// </summary>
     /// <param name="parent">The parent path.</param>
     /// <param name="name">The name in the parent path.</param>
-    public static IPath Combine(IPath parent, string name)
+    [RequireNotNull(nameof(parent))]
+    [Require("parent.IsValid()")]
+    [RequireNotNull(nameof(name))]
+    [Ensure("Result.IsNotNull()")]
+    private static IPath CombineVerified(IPath parent, string name)
     {
-        parent.MustBeNotNull();
-        parent.MustBeValid();
-        name.MustBeNotNull();
-
         List<string> ParentNameList = new(parent.Ancestors) { parent.Name };
         IPath Result = new Path(ParentNameList, name);
 
-        Result.EnsureNotNull();
         return Result;
     }
 
@@ -152,17 +149,16 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// </summary>
     /// <param name="parent">The parent folder, <see langword="null"/> for the root folder.</param>
     /// <param name="path">The path.</param>
-    public static IFolder GetRelativeFolder(IFolder parent, IPath path)
+    [RequireNotNull(nameof(parent))]
+    [Require("parent.IsValid()")]
+    [RequireNotNull(nameof(path))]
+    [Require("path.IsValid()")]
+    [Ensure("Result.IsNotNull()")]
+    private static IFolder GetRelativeFolderVerified(IFolder parent, IPath path)
     {
-        parent.MustBeNotNull();
-        parent.MustBeValid();
-        path.MustBeNotNull();
-        path.MustBeValid();
-
         IFolder AncestorFolder = NavigateAncestors(parent, path);
         IFolder Result = AncestorFolder.Folders.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
-        Result.EnsureNotNull();
         return Result;
     }
 
@@ -171,17 +167,16 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
     /// </summary>
     /// <param name="parent">The parent folder, <see langword="null"/> for the root folder.</param>
     /// <param name="path">The path.</param>
-    public static IFile GetRelativeFile(IFolder parent, IPath path)
+    [RequireNotNull(nameof(parent))]
+    [Require("parent.IsValid()")]
+    [RequireNotNull(nameof(path))]
+    [Require("path.IsValid()")]
+    [Ensure("Result.IsNotNull()")]
+    private static IFile GetRelativeFileVerified(IFolder parent, IPath path)
     {
-        parent.MustBeNotNull();
-        parent.MustBeValid();
-        path.MustBeNotNull();
-        path.MustBeValid();
-
         IFolder AncestorFolder = NavigateAncestors(parent, path);
         IFile Result = AncestorFolder.Files.Find(item => item.Name == path.Name) ?? throw new NotFoundException();
 
-        Result.EnsureNotNull();
         return Result;
     }
 
@@ -196,4 +191,13 @@ public record Path(IList<string> Ancestors, string Name) : IPath, IEquatable<Pat
 
         return CurrentFolder;
     }
+
+    /// <inheritdoc/>
+    public string ToPathString(bool fromRoot = false) => ToPathString(System.IO.Path.DirectorySeparatorChar, fromRoot);
+
+    /// <inheritdoc/>
+    public string ToPathString(char separator, bool fromRoot = false) => ToPathString(separator.ToString(), fromRoot);
+
+    /// <inheritdoc/>
+    public string ToPathString(string separator, bool fromRoot = false) => (fromRoot ? separator : string.Empty) + string.Join(separator, new List<string>(Ancestors) { Name });
 }

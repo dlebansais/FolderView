@@ -27,4 +27,24 @@ public interface IPath
     /// Returns a new composed path to the parent.
     /// </summary>
     IPath Up();
+
+    /// <summary>
+    /// Gets the path as a string using the default OS separator.
+    /// </summary>
+    /// <param name="fromRoot"><see langword="true"/> if the result to represent a path from a root folder.</param>
+    string ToPathString(bool fromRoot = false);
+
+    /// <summary>
+    /// Gets the path as a string.
+    /// </summary>
+    /// <param name="separator">The separator.</param>
+    /// <param name="fromRoot"><see langword="true"/> if the result to represent a path from a root folder.</param>
+    string ToPathString(char separator, bool fromRoot = false);
+
+    /// <summary>
+    /// Gets the path as a string.
+    /// </summary>
+    /// <param name="separator">The separator.</param>
+    /// <param name="fromRoot"><see langword="true"/> if the result to represent a path from a root folder.</param>
+    string ToPathString(string separator, bool fromRoot = false);
 }

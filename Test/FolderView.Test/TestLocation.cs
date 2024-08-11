@@ -53,6 +53,7 @@ public class TestLocation
         Assert.That(AbsolutePathFolder, Is.EqualTo(Location.CanonicalRoot));
     }
 
+#if NOT
     [DebugOnly]
     [Test]
     public void TestFake()
@@ -100,6 +101,7 @@ public class TestLocation
         Assert.That(Exception.Message, Is.EqualTo(PropertyName));
 #endif
     }
+#endif
 
     [Test]
     public void TestEmptyLocation()

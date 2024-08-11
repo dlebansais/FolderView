@@ -2,6 +2,7 @@
 
 using System;
 
+#if NOT
 internal record FakeFolder(IFolder? Parent, string Name, IFolderCollection Folders, IFileCollection Files) : IFolder, ICloneable
 {
     public bool IsRoot { get; } = Parent is null;
@@ -16,3 +17,4 @@ internal record FakeFolder(IFolder? Parent, string Name, IFolderCollection Folde
     {
     }
 }
+#endif

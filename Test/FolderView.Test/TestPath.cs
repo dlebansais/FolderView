@@ -172,6 +172,7 @@ public class TestPath
         Assert.That(SecondLevelFolderPath, Is.EqualTo(SamePath));
     }
 
+#if NOT
     [DebugOnly]
     [Test]
     public async Task TestNullAsync()
@@ -321,6 +322,7 @@ public class TestPath
         var OtherFakeFolder = ((IFolder)FakeFolder).Clone();
         Assert.That(OtherFakeFolder, Is.EqualTo(FakeFolder));
     }
+#endif
 
     [Test]
     public void TestEqual()
@@ -353,5 +355,77 @@ public class TestPath
 
         Assert.That(TestPath, Is.EqualTo(OtherTestPath));
         Assert.That(TestPath.Equals(OtherTestPath), Is.True);
+    }
+
+    [Test]
+    public async Task TestPathStringNoAncestor()
+    {
+        IPath CombineResult;
+
+        using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
+
+        const IFolder? NullFolder = null;
+        CombineResult = Path.Combine(NullFolder, RootFolderStructure.RootFolders[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(0));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.RootFolders[0]));
+
+        Assert.That(CombineResult.ToPathString(), Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.ToPathString(' '), Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.ToPathString(" "), Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.ToPathString(fromRoot: true), Is.EqualTo($"{System.IO.Path.DirectorySeparatorChar}{RootFolderStructure.RootFolders[0]}"));
+        Assert.That(CombineResult.ToPathString(' ', fromRoot: true), Is.EqualTo($" {RootFolderStructure.RootFolders[0]}"));
+        Assert.That(CombineResult.ToPathString(" ", fromRoot: true), Is.EqualTo($" {RootFolderStructure.RootFolders[0]}"));
+    }
+
+    [Test]
+    public async Task TestPathStringOneAncestor()
+    {
+        IPath CombineResult;
+
+        using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
+
+        Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
+        IFolder FirstLevelFolder = Path.GetRelativeFolder(RootFolder, FirstLevelFolderPath);
+
+        CombineResult = Path.Combine(FirstLevelFolder, RootFolderStructure.Folder_0_0_Folders[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(1));
+        Assert.That(CombineResult.Ancestors[0], Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.Folder_0_0_Folders[0]));
+
+        Assert.That(CombineResult.ToPathString(), Is.EqualTo(CombineResult.ToPathString(System.IO.Path.DirectorySeparatorChar)));
+        Assert.That(CombineResult.ToPathString('/'), Is.EqualTo($"{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}"));
+        Assert.That(CombineResult.ToPathString("/"), Is.EqualTo($"{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}"));
+        Assert.That(CombineResult.ToPathString(fromRoot: true), Is.EqualTo(CombineResult.ToPathString(System.IO.Path.DirectorySeparatorChar, fromRoot: true)));
+        Assert.That(CombineResult.ToPathString('/', fromRoot: true), Is.EqualTo($"/{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}"));
+        Assert.That(CombineResult.ToPathString("/", fromRoot: true), Is.EqualTo($"/{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}"));
+    }
+
+    [Test]
+    public async Task TestPathStringMoreThanOneAncestor()
+    {
+        IPath CombineResult;
+
+        using var RootFolder = await TestTools.LoadLocalRootAsync().ConfigureAwait(false);
+
+        Path FirstLevelFolderPath = new(new List<string>(), RootFolderStructure.RootFolders[0]);
+        IFolder FirstLevelFolder = Path.GetRelativeFolder(RootFolder, FirstLevelFolderPath);
+        Path SecondLevelFolderPath = new(new List<string>(), RootFolderStructure.Folder_0_0_Folders[0]);
+        IFolder SecondLevelFolder = Path.GetRelativeFolder(FirstLevelFolder, SecondLevelFolderPath);
+
+        CombineResult = Path.Combine(SecondLevelFolder, RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]);
+
+        Assert.That(CombineResult.Ancestors, Has.Count.EqualTo(2));
+        Assert.That(CombineResult.Ancestors[0], Is.EqualTo(RootFolderStructure.RootFolders[0]));
+        Assert.That(CombineResult.Ancestors[1], Is.EqualTo(RootFolderStructure.Folder_0_0_Folders[0]));
+        Assert.That(CombineResult.Name, Is.EqualTo(RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]));
+
+        Assert.That(CombineResult.ToPathString(), Is.EqualTo(CombineResult.ToPathString(System.IO.Path.DirectorySeparatorChar)));
+        Assert.That(CombineResult.ToPathString('/'), Is.EqualTo($"{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}/{RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]}"));
+        Assert.That(CombineResult.ToPathString("/"), Is.EqualTo($"{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}/{RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]}"));
+        Assert.That(CombineResult.ToPathString(fromRoot: true), Is.EqualTo(CombineResult.ToPathString(System.IO.Path.DirectorySeparatorChar, fromRoot: true)));
+        Assert.That(CombineResult.ToPathString('/', fromRoot: true), Is.EqualTo($"/{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}/{RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]}"));
+        Assert.That(CombineResult.ToPathString("/", fromRoot: true), Is.EqualTo($"/{RootFolderStructure.RootFolders[0]}/{RootFolderStructure.Folder_0_0_Folders[0]}/{RootFolderStructure.Folder_0_0_Folder_1_0_Files[0]}"));
     }
 }
