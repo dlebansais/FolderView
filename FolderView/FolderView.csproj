@@ -7,9 +7,9 @@
         <Platforms>x64</Platforms>
 
         <RootNamespace>FolderView</RootNamespace>
-        <Version>1.0.10</Version>
-        <AssemblyVersion>1.0.10.10</AssemblyVersion>
-        <FileVersion>1.0.10.10</FileVersion>
+        <Version>1.0.11</Version>
+        <AssemblyVersion>1.0.11.11</AssemblyVersion>
+        <FileVersion>1.0.11.11</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Company />
         <Product />
@@ -44,7 +44,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.CSharpLatest" Version="0.0.7">
+        <PackageReference Include="Nullable.Extended.Analyzer" Version="1.15.6169">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="dlebansais.CSharpLatest" Version="1.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -52,11 +56,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.4.6" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.5.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts.Analyzers" Version="1.4.6" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers" Version="1.5.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -69,8 +73,8 @@
         </PackageReference>
 
         <PackageReference Include="Octokit" Version="13.0.1" />
-        <PackageReference Include="Method.Contracts-Debug" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-        <PackageReference Include="Method.Contracts" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="Method.Contracts-Debug" Version="1.5.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="1.5.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'=='net481'">
